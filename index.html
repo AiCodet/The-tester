@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Lucky Lime — Play Money</title>
+<style>
+:root{
+  --bg:#0b0f14; --panel:#121923; --panel2:#18212d; --text:#f5f7fa;
+  --muted:#95a3b5; --lime:#b9ff38; --lime2:#7fdc18; --red:#ff5864;
+  --gold:#ffd166; --line:#253141;
+}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#090c11,#0d131b 45%,#0a0f15);
+color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;min-height:100vh}
+button,input{font:inherit} button{cursor:pointer}
+.app{max-width:520px;margin:0 auto;min-height:100vh;padding:18px 16px 94px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:14px;background:var(--lime);
+display:grid;place-items:center;color:#0a0f12;font-weight:1000;box-shadow:0 0 30px #b9ff3835}
+.brand h1{font-size:18px;margin:0}.brand p{font-size:11px;color:var(--muted);margin:2px 0 0}
+.balance{background:var(--panel);border:1px solid var(--line);padding:9px 12px;border-radius:14px;text-align:right}
+.balance small{display:block;color:var(--muted);font-size:10px}.balance strong{font-size:16px;color:var(--lime)}
+.hero{background:radial-gradient(circle at 90% 0,#b9ff3824,transparent 40%),var(--panel);
+border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:16px;overflow:hidden}
+.hero h2{margin:0 0 6px;font-size:25px}.hero p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+.row{display:flex;gap:10px;margin-top:14px}.btn{border:0;border-radius:13px;padding:12px 14px;font-weight:800}
+.btn.primary{background:var(--lime);color:#0b100b}.btn.ghost{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.game-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px;min-height:145px;position:relative;overflow:hidden}
+.game-card .icon{font-size:32px}.game-card h3{margin:10px 0 4px}.game-card p{margin:0;color:var(--muted);font-size:12px}
+.game-card button{position:absolute;left:15px;right:15px;bottom:13px;border:0;border-radius:11px;padding:9px;background:var(--panel2);color:white;font-weight:700}
+.badge{position:absolute;right:12px;top:12px;background:#b9ff3817;color:var(--lime);border:1px solid #b9ff3833;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:900}
+.screen{display:none}.screen.active{display:block}
+.back{background:none;border:0;color:var(--muted);padding:4px 0 12px;font-weight:700}
+.gamebox{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px}
+.betbar{display:flex;align-items:center;gap:8px;margin:16px 0}.betbar input{width:100%;background:#0d131b;border:1px solid var(--line);
+color:white;border-radius:12px;padding:12px}.betbar button{border:0;background:var(--panel2);color:white;border-radius:11px;padding:11px}
+.bigplay{width:100%;padding:14px;border:0;border-radius:14px;background:var(--lime);color:#0a0f0a;font-weight:1000}
+.result{min-height:44px;margin-top:13px;color:var(--muted);font-weight:700}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}
+.reel{background:#eef3f7;color:#111;border-radius:14px;aspect-ratio:1;display:grid;place-items:center;font-size:46px}
+.roulette-wheel{width:190px;height:190px;border-radius:50%;margin:18px auto;background:conic-gradient(#e53935 0 10deg,#151515 10deg 20deg,#e53935 20deg 30deg,#151515 30deg 40deg,#e53935 40deg 50deg,#151515 50deg 60deg,#e53935 60deg 70deg,#151515 70deg 80deg,#e53935 80deg 90deg,#151515 90deg 100deg,#e53935 100deg 110deg,#151515 110deg 120deg,#e53935 120deg 130deg,#151515 130deg 140deg,#e53935 140deg 150deg,#151515 150deg 160deg,#e53935 160deg 170deg,#151515 170deg 180deg,#e53935 180deg 190deg,#151515 190deg 200deg,#e53935 200deg 210deg,#151515 210deg 220deg,#e53935 220deg 230deg,#151515 230deg 240deg,#e53935 240deg 250deg,#151515 250deg 260deg,#e53935 260deg 270deg,#151515 270deg 280deg,#e53935 280deg 290deg,#151515 290deg 300deg,#e53935 300deg 310deg,#151515 310deg 320deg,#e53935 320deg 330deg,#151515 330deg 340deg,#e53935 340deg 350deg,#0aa04f 350deg 360deg);
+display:grid;place-items:center;border:10px solid #202936;box-shadow:inset 0 0 0 5px #0b0f14}
+.roulette-wheel span{background:#f4f5f6;color:#111;width:70px;height:70px;border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:1000}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.choice{padding:11px;border-radius:11px;border:1px solid var(--line);background:var(--panel2);color:white;font-weight:800}
+.choice.sel{outline:2px solid var(--lime);color:var(--lime)}
+.cards{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.card{width:54px;height:76px;background:white;color:#111;border-radius:9px;padding:7px;font-weight:900;box-shadow:0 5px 16px #0005}
+.card.red{color:#d32934}.scoreline{display:flex;justify-content:space-between;color:var(--muted);font-size:13px}
+.footer-nav{position:fixed;bottom:0;left:0;right:0;background:#0d131bf2;border-top:1px solid var(--line);backdrop-filter:blur(12px)}
+.footer-inner{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);padding:10px 16px max(10px,env(safe-area-inset-bottom))}
+.navbtn{background:none;border:0;color:var(--muted);font-size:12px;padding:7px}.navbtn.active{color:var(--lime)}
+.history{margin-top:14px}.hist{padding:11px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;font-size:12px}
+.pos{color:var(--lime)}.neg{color:var(--red)}
+.note{font-size:11px;color:var(--muted);text-align:center;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand"><div class="logo">LL</div><div><h1>Lucky Lime</h1><p>PLAY MONEY ONLY</p></div></div>
+    <div class="balance"><small>FAKE BALANCE</small><strong id="balance">10,000</strong></div>
+  </div>
+
+  <section id="home" class="screen active">
+    <div class="hero">
+      <h2>Play. Win. Reset. 🎲</h2>
+      <p>Casino-style games using pretend credits only. No deposits, no purchases, no cash-out.</p>
+      <div class="row"><button class="btn primary" onclick="daily()">Claim +2,500</button><button class="btn ghost" onclick="resetBank()">Reset balance</button></div>
+    </div>
+    <div class="grid">
+      <div class="game-card"><span class="badge">3x MATCH</span><div class="icon">🎰</div><h3>Slots</h3><p>Match symbols for bigger multipliers.</p><button onclick="show('slots')">Play</button></div>
+      <div class="game-card"><span class="badge">2x COLOUR</span><div class="icon">🎯</div><h3>Roulette</h3><p>Pick red, black or green.</p><button onclick="show('roulette')">Play</button></div>
+      <div class="game-card"><span class="badge">21 WINS</span><div class="icon">🃏</div><h3>Blackjack</h3><p>Beat the dealer without going over 21.</p><button onclick="startBlackjack();show('blackjack')">Play</button></div>
+      <div class="game-card"><span class="badge">SOON</span><div class="icon">🎲</div><h3>Dice</h3><p>More fake-credit games can go here.</p><button onclick="alert('Coming soon')">Locked</button></div>
+    </div>
+  </section>
+
+  <section id="slots" class="screen">
+    <button class="back" onclick="show('home')">← Home</button>
+    <div class="gamebox"><h2>🎰 Slots</h2>
+      <div class="slots"><div class="reel" id="r1">🍒</div><div class="reel" id="r2">⭐</div><div class="reel" id="r3">7️⃣</div></div>
+      <div class="betbar"><button onclick="adjBet('slotBet',-.5)">½</button><input id="slotBet" type="number" min="10" value="100"><button onclick="adjBet('slotBet',2)">×2</button></div>
+      <button class="bigplay" onclick="spinSlots()">SPIN</button><div class="result" id="slotResult">Three matching symbols = jackpot.</div>
+    </div>
+  </section>
+
+  <section id="roulette" class="screen">
+    <button class="back" onclick="show('home')">← Home</button>
+    <div class="gamebox"><h2>🎯 Roulette</h2>
+      <div class="roulette-wheel"><span id="rouletteNum">?</span></div>
+      <div class="choices">
+        <button class="choice sel" data-c="red" onclick="pickColour(this)">RED</button>
+        <button class="choice" data-c="black" onclick="pickColour(this)">BLACK</button>
+        <button class="choice" data-c="green" onclick="pickColour(this)">GREEN</button>
+      </div>
+      <div class="betbar"><button onclick="adjBet('rouletteBet',-.5)">½</button><input id="rouletteBet" type="number" min="10" value="100"><button onclick="adjBet('rouletteBet',2)">×2</button></div>
+      <button class="bigplay" onclick="spinRoulette()">SPIN WHEEL</button><div class="result" id="rouletteResult">Red/black pays 2×. Green pays 14×.</div>
+    </div>
+  </section>
+
+  <section id="blackjack" class="screen">
+    <button class="back" onclick="show('home')">← Home</button>
+    <div class="gamebox"><h2>🃏 Blackjack</h2>
+      <div class="scoreline"><span>Dealer</span><span id="dealerScore">0</span></div><div class="cards" id="dealerCards"></div>
+      <div class="scoreline"><span>You</span><span id="playerScore">0</span></div><div class="cards" id="playerCards"></div>
+      <div class="betbar"><button onclick="adjBet('bjBet',-.5)">½</button><input id="bjBet" type="number" min="10" value="100"><button onclick="adjBet('bjBet',2)">×2</button></div>
+      <div class="row"><button class="btn primary" style="flex:1" onclick="bjHit()">HIT</button><button class="btn ghost" style="flex:1" onclick="bjStand()">STAND</button><button class="btn ghost" onclick="startBlackjack()">NEW</button></div>
+      <div class="result" id="bjResult">Get closer to 21 than the dealer.</div>
+    </div>
+  </section>
+
+  <section id="history" class="screen"><h2>Activity</h2><div id="historyList" class="history"></div></section>
+  <section id="profile" class="screen"><div class="hero"><h2>Player Profile</h2><p>Guest player • Fake-credit mode</p></div><div class="gamebox"><h3>Safety by design</h3><p style="color:var(--muted);line-height:1.55">No real currency, deposits, purchases, cash prizes or withdrawals. Credits have no monetary value.</p></div></section>
+</div>
+
+<div class="footer-nav"><div class="footer-inner">
+<button class="navbtn active" onclick="nav(this,'home')">⌂<br>Home</button>
+<button class="navbtn" onclick="nav(this,'history')">↻<br>Activity</button>
+<button class="navbtn" onclick="nav(this,'profile')">●<br>Profile</button>
+</div></div>
+
+<script>
+let bank = +(localStorage.getItem('ll_bank')||10000);
+let history = JSON.parse(localStorage.getItem('ll_history')||'[]');
+let picked='red', bj={player:[],dealer:[],active:false,bet:0};
+const symbols=['🍒','🍋','⭐','💎','7️⃣'];
+function save(){localStorage.setItem('ll_bank',bank);localStorage.setItem('ll_history',JSON.stringify(history));render()}
+function render(){document.getElementById('balance').textContent=bank.toLocaleString(); let el=document.getElementById('historyList');
+if(el) el.innerHTML=history.length?history.slice().reverse().map(h=>`<div class="hist"><span>${h.game}</span><span class="${h.delta>=0?'pos':'neg'}">${h.delta>=0?'+':''}${h.delta.toLocaleString()}</span></div>`).join(''):'<p style="color:#95a3b5">No games yet.</p>'}
+function log(game,delta){history.push({game,delta,t:Date.now()});if(history.length>40)history.shift();save()}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function nav(btn,id){document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');show(id);render()}
+function daily(){let d=new Date().toDateString();if(localStorage.getItem('ll_daily')===d)return alert('Already claimed today.');bank+=2500;localStorage.setItem('ll_daily',d);log('Daily refill',2500)}
+function resetBank(){bank=10000;history=[];save()}
+function adjBet(id,m){let e=document.getElementById(id),v=Math.max(10,Math.floor((+e.value||100)*m));e.value=Math.min(v,bank||10)}
+function validBet(id){let v=Math.floor(+document.getElementById(id).value);if(!v||v<10)return null;if(v>bank){alert('Not enough fake credits.');return null}return v}
+
+function spinSlots(){let bet=validBet('slotBet');if(!bet)return;
+let a=[0,0,0].map(()=>symbols[Math.floor(Math.random()*symbols.length)]);['r1','r2','r3'].forEach((id,i)=>document.getElementById(id).textContent=a[i]);
+bank-=bet;let payout=0,msg='No match.';
+if(a[0]===a[1]&&a[1]===a[2]){payout=bet*(a[0]==='7️⃣'?10:a[0]==='💎'?7:5);msg=`Jackpot! +${payout.toLocaleString()}`}
+else if(a[0]===a[1]||a[1]===a[2]||a[0]===a[2]){payout=bet*2;msg=`Pair! +${payout.toLocaleString()}`}
+bank+=payout;log('Slots',payout-bet);document.getElementById('slotResult').textContent=msg}
+
+function pickColour(el){document.querySelectorAll('.choice').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');picked=el.dataset.c}
+function spinRoulette(){let bet=validBet('rouletteBet');if(!bet)return;bank-=bet;
+let n=Math.floor(Math.random()*37), c=n===0?'green':([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n)?'red':'black');
+let payout=(picked===c)?bet*(c==='green'?14:2):0;bank+=payout;log('Roulette',payout-bet);
+document.getElementById('rouletteNum').textContent=n;document.getElementById('rouletteResult').textContent=`${n} ${c.toUpperCase()} — ${payout?`won ${payout.toLocaleString()}`:'lost the bet'}.`}
+
+function drawCard(){let vals=['A','2','3','4','5','6','7','8','9','10','J','Q','K'], suits=['♥','♦','♣','♠'];return {v:vals[Math.floor(Math.random()*13)],s:suits[Math.floor(Math.random()*4)]}}
+function score(cards){let total=0,aces=0;cards.forEach(c=>{if(c.v==='A'){total+=11;aces++}else if(['J','Q','K'].includes(c.v))total+=10;else total+=+c.v});while(total>21&&aces){total-=10;aces--}return total}
+function drawCards(){let pc=document.getElementById('playerCards'),dc=document.getElementById('dealerCards');pc.innerHTML=bj.player.map(c=>`<div class="card ${['♥','♦'].includes(c.s)?'red':''}">${c.v}<br>${c.s}</div>`).join('');dc.innerHTML=bj.dealer.map(c=>`<div class="card ${['♥','♦'].includes(c.s)?'red':''}">${c.v}<br>${c.s}</div>`).join('');document.getElementById('playerScore').textContent=score(bj.player);document.getElementById('dealerScore').textContent=score(bj.dealer)}
+function startBlackjack(){bj={player:[drawCard(),drawCard()],dealer:[drawCard(),drawCard()],active:true,bet:0};drawCards();document.getElementById('bjResult').textContent='Choose hit or stand.'}
+function ensureBjBet(){if(bj.bet)return true;let b=validBet('bjBet');if(!b)return false;bj.bet=b;bank-=b;save();return true}
+function finishBj(outcome){bj.active=false;let payout=0;if(outcome==='win')payout=bj.bet*2;if(outcome==='push')payout=bj.bet;bank+=payout;log('Blackjack',payout-bj.bet);document.getElementById('bjResult').textContent=outcome==='win'?`You win +${payout.toLocaleString()}!`:outcome==='push'?'Push — bet returned.':'Dealer wins.'}
+function bjHit(){if(!bj.active)startBlackjack();if(!ensureBjBet())return;bj.player.push(drawCard());drawCards();if(score(bj.player)>21)finishBj('lose');else if(score(bj.player)===21)bjStand()}
+function bjStand(){if(!bj.active)return;if(!ensureBjBet())return;while(score(bj.dealer)<17)bj.dealer.push(drawCard());drawCards();let p=score(bj.player),d=score(bj.dealer);if(d>21||p>d)finishBj('win');else if(p===d)finishBj('push');else finishBj('lose')}
+render();
+</script>
+</body>
+</html>
