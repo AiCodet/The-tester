@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hustle Empire</title>
+<style>
+  :root{
+    --bg:#091018; --panel:#111b26; --panel2:#172331; --line:#26384a;
+    --text:#f3f7fb; --muted:#8da0b4; --good:#56d48f; --bad:#ff6b78;
+    --warn:#ffd166; --accent:#6ee7ff; --accent2:#8f7cff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    background:
+      radial-gradient(circle at 15% 0%,rgba(110,231,255,.10),transparent 26%),
+      radial-gradient(circle at 90% 10%,rgba(143,124,255,.10),transparent 26%),
+      var(--bg); color:var(--text); min-height:100vh;
+  }
+  button{font:inherit}
+  .shell{max-width:1180px;margin:auto;padding:18px}
+  .top{
+    display:grid;grid-template-columns:1.3fr repeat(4,minmax(0,.55fr));gap:10px;align-items:stretch;
+    position:sticky;top:0;z-index:8;padding:10px 0;background:linear-gradient(var(--bg) 70%,transparent);
+  }
+  .brand,.stat,.panel{background:rgba(17,27,38,.92);border:1px solid var(--line);border-radius:16px}
+  .brand{padding:14px 16px;display:flex;align-items:center;gap:12px}
+  .logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#061018;font-size:22px;font-weight:900}
+  .brand h1{font-size:18px;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+  .stat{padding:11px 12px}.stat b{display:block;font-size:18px}.stat span{font-size:11px;color:var(--muted)}
+  .layout{display:grid;grid-template-columns:210px 1fr;gap:14px}
+  .nav{padding:10px;height:max-content;position:sticky;top:92px}
+  .nav button{
+    width:100%;border:0;background:transparent;color:var(--muted);text-align:left;padding:12px;border-radius:11px;cursor:pointer;margin:2px 0
+  }
+  .nav button:hover,.nav button.active{background:var(--panel2);color:var(--text)}
+  .main{min-width:0}
+  .panel{padding:16px;margin-bottom:14px}
+  .hero{
+    min-height:180px;display:flex;align-items:flex-end;
+    background:
+      linear-gradient(90deg,rgba(9,16,24,.92),rgba(9,16,24,.45)),
+      radial-gradient(circle at 70% 30%,rgba(110,231,255,.18),transparent 30%),
+      linear-gradient(135deg,#10202d,#171b34);
+  }
+  .hero h2{font-size:30px;line-height:1;margin:0 0 8px}.hero p{max-width:600px;color:#b7c5d4;margin:0 0 14px}
+  .btn{border:0;border-radius:11px;padding:10px 14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),#61b7ff);color:#071018}
+  .btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+  .btn.danger{background:#3a1d25;color:#ff9aa3;border:1px solid #65303b}
+  .btn:disabled{opacity:.38;cursor:not-allowed}
+  .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .card{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .card h3{margin:0 0 4px;font-size:16px}.sub{color:var(--muted);font-size:12px}
+  .money{font-size:22px;font-weight:850;margin:10px 0}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .tag{font-size:11px;padding:5px 8px;border-radius:999px;background:#203142;color:#b8cae0}
+  .tag.good{background:#16392a;color:#79e6a8}.tag.warn{background:#41371d;color:#ffe091}.tag.bad{background:#402029;color:#ff9ca5}
+  .meter{height:8px;background:#0c141d;border-radius:999px;overflow:hidden;margin-top:7px}
+  .meter i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent))}
+  .section-title{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px}
+  .section-title h2{font-size:19px;margin:0}
+  .list{display:grid;gap:9px}
+  .list-item{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:13px}
+  .list-item .left{min-width:0}.list-item strong{display:block}.list-item small{color:var(--muted)}
+  .actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+  .log{height:260px;overflow:auto;font-size:13px}
+  .log div{padding:7px 0;border-bottom:1px dashed #243444;color:#c2cfdb}
+  .log .good{color:#78e3a5}.log .bad{color:#ff9099}.log .warn{color:#ffe08b}
+  .locked{opacity:.62;filter:saturate(.7)}
+  .hidden{display:none!important}
+  .kpi{font-size:28px;font-weight:900}.tiny{font-size:11px;color:var(--muted)}
+  .two{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+  .progress-big{height:12px;background:#0c141d;border-radius:999px;overflow:hidden;margin:9px 0 2px}
+  .progress-big i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .toast{position:fixed;right:20px;bottom:20px;background:#101b25;border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:0 12px 35px #0007;display:none;max-width:340px;z-index:20}
+  @media(max-width:850px){
+    .top{grid-template-columns:1fr 1fr 1fr}.brand{grid-column:1/-1}.layout{grid-template-columns:1fr}.nav{position:static;display:flex;overflow:auto;gap:6px}.nav button{white-space:nowrap;width:auto}.grid{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}
+  }
+  @media(max-width:560px){.grid{grid-template-columns:1fr}.top{grid-template-columns:1fr 1fr}.hero h2{font-size:26px}.shell{padding:10px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="brand">
+      <div class="logo">£</div>
+      <div><h1>Hustle Empire</h1><p>Start with £100. Build something ridiculous.</p></div>
+    </div>
+    <div class="stat"><b id="cashTop">£100</b><span>Cash</span></div>
+    <div class="stat"><b id="dayTop">Day 1</b><span>Time</span></div>
+    <div class="stat"><b id="repTop">0</b><span>Reputation</span></div>
+    <div class="stat"><b id="worthTop">£100</b><span>Net worth</span></div>
+  </div>
+
+  <div class="layout">
+    <div class="nav panel">
+      <button class="active" data-tab="dashboard">🏠 Dashboard</button>
+      <button data-tab="gigs">⚡ Quick Gigs</button>
+      <button data-tab="businesses">🏢 Businesses</button>
+      <button data-tab="staff">👥 Staff</button>
+      <button data-tab="upgrades">🧠 Upgrades</button>
+      <button data-tab="finance">📊 Finance</button>
+    </div>
+
+    <main class="main">
+      <section id="dashboard" class="tab">
+        <div class="panel hero">
+          <div>
+            <div class="tag" id="rankTag">Rank: Nobody</div>
+            <h2 id="heroTitle">Turn £100 into an empire.</h2>
+            <p>Do small jobs, buy your first business, reinvest profits and survive random market events. Your goal is £1,000,000 net worth.</p>
+            <button class="btn" onclick="nextDay()">End Day →</button>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="panel"><div class="tiny">DAILY PROFIT</div><div class="kpi" id="dailyProfit">£0</div><div class="sub">Estimated from businesses and staff.</div></div>
+          <div class="panel"><div class="tiny">TOTAL EARNED</div><div class="kpi" id="earned">£0</div><div class="sub">Lifetime revenue.</div></div>
+          <div class="panel"><div class="tiny">ACTIVE BUSINESSES</div><div class="kpi" id="businessCount">0</div><div class="sub">Own multiple of the same business.</div></div>
+        </div>
+
+        <div class="two">
+          <div class="panel">
+            <div class="section-title"><h2>Empire progress</h2><span class="sub" id="goalText">£100 / £1,000,000</span></div>
+            <div class="progress-big"><i id="goalBar" style="width:.01%"></i></div>
+            <div class="sub">Reach £1m net worth to win.</div>
+          </div>
+          <div class="panel">
+            <div class="section-title"><h2>Market</h2><span id="marketTag" class="tag good">Stable</span></div>
+            <div class="money" id="marketText">Normal demand</div>
+            <div class="sub">Market conditions affect business income each day.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="section-title"><h2>Activity</h2><button class="btn secondary" onclick="clearLog()">Clear</button></div>
+          <div class="log" id="log"></div>
+        </div>
+      </section>
+
+      <section id="gigs" class="tab hidden">
+        <div class="panel">
+          <div class="section-title"><h2>Quick Gigs</h2><span class="sub">Instant cash, limited each day</span></div>
+          <div class="grid" id="gigGrid"></div>
+        </div>
+      </section>
+
+      <section id="businesses" class="tab hidden">
+        <div class="panel">
+          <div class="section-title"><h2>Businesses</h2><span class="sub">Buy, scale, sell</span></div>
+          <div class="grid" id="businessGrid"></div>
+        </div>
+      </section>
+
+      <section id="staff" class="tab hidden">
+        <div class="panel">
+          <div class="section-title"><h2>Staff</h2><span class="sub">Staff boost all business income</span></div>
+          <div class="grid" id="staffGrid"></div>
+        </div>
+      </section>
+
+      <section id="upgrades" class="tab hidden">
+        <div class="panel">
+          <div class="section-title"><h2>Upgrades</h2><span class="sub">Permanent multipliers</span></div>
+          <div class="grid" id="upgradeGrid"></div>
+        </div>
+      </section>
+
+      <section id="finance" class="tab hidden">
+        <div class="grid">
+          <div class="panel"><div class="tiny">CASH</div><div class="kpi" id="finCash"></div></div>
+          <div class="panel"><div class="tiny">ASSET VALUE</div><div class="kpi" id="finAssets"></div></div>
+          <div class="panel"><div class="tiny">NET WORTH</div><div class="kpi" id="finWorth"></div></div>
+        </div>
+        <div class="panel">
+          <div class="section-title"><h2>Company overview</h2><span class="tag" id="riskTag">Low risk</span></div>
+          <div class="list" id="financeList"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const fmt = n => "£" + Math.round(n).toLocaleString("en-GB");
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+
+const gigs = [
+  {id:"wash",name:"Car Wash",icon:"🚗",pay:[18,32],rep:1,uses:3,desc:"Basic local work. Reliable, not glamorous."},
+  {id:"resell",name:"Resell Item",icon:"📦",pay:[25,55],rep:2,uses:2,desc:"Buy low, sell higher. Sometimes."},
+  {id:"design",name:"Quick Design",icon:"🎨",pay:[35,70],rep:3,uses:1,desc:"A small freelance design job.",unlock:8}
+];
+
+const businesses = [
+  {id:"vending",name:"Vending Route",icon:"🥤",cost:450,income:42,rep:0,desc:"Cheap entry point. Small but steady."},
+  {id:"detail",name:"Car Detailing",icon:"🧽",cost:1800,income:145,rep:12,desc:"Higher margins and repeat customers."},
+  {id:"store",name:"Online Store",icon:"🛒",cost:6500,income:430,rep:30,desc:"Scalable, but market-sensitive."},
+  {id:"agency",name:"Creative Agency",icon:"💻",cost:22000,income:1250,rep:65,desc:"Staff-heavy service business."},
+  {id:"warehouse",name:"E-commerce Warehouse",icon:"🏭",cost:85000,income:4100,rep:120,desc:"Serious logistics. Serious money."},
+  {id:"property",name:"Property Company",icon:"🏙️",cost:300000,income:14500,rep:220,desc:"The late-game wealth machine."}
+];
+
+const staff = [
+  {id:"assistant",name:"Assistant",cost:800,boost:.05,rep:8,desc:"+5% to all daily income."},
+  {id:"sales",name:"Sales Rep",cost:3500,boost:.12,rep:25,desc:"+12% to all daily income."},
+  {id:"manager",name:"Operations Manager",cost:12000,boost:.22,rep:55,desc:"+22% to all daily income."},
+  {id:"director",name:"Growth Director",cost:60000,boost:.40,rep:130,desc:"+40% to all daily income."}
+];
+
+const upgrades = [
+  {id:"brand",name:"Better Branding",cost:1200,mult:.08,rep:10,desc:"+8% permanent revenue."},
+  {id:"ads",name:"Paid Ads System",cost:5000,mult:.15,rep:28,desc:"+15% permanent revenue."},
+  {id:"automation",name:"Automation Stack",cost:18000,mult:.25,rep:60,desc:"+25% permanent revenue."},
+  {id:"data",name:"Customer Data Engine",cost:70000,mult:.38,rep:140,desc:"+38% permanent revenue."}
+];
+
+let state = {
+  cash:100, day:1, rep:0, earned:0,
+  biz:{}, staff:{}, upgrades:{},
+  gigUses:{}, market:1, marketName:"Stable",
+  log:["Day 1 — You have £100 and absolutely no excuse."],
+  won:false
+};
+
+function save(){ localStorage.setItem("hustleEmpireSave",JSON.stringify(state)); }
+function load(){
+  try{
+    const s=JSON.parse(localStorage.getItem("hustleEmpireSave"));
+    if(s) state={...state,...s};
+  }catch(e){}
+}
+function resetGigUses(){ state.gigUses={}; gigs.forEach(g=>state.gigUses[g.id]=0); }
+
+function rank(){
+  const w=netWorth();
+  if(w>=1000000)return "Mogul";
+  if(w>=300000)return "Tycoon";
+  if(w>=100000)return "Founder";
+  if(w>=25000)return "Operator";
+  if(w>=5000)return "Entrepreneur";
+  if(w>=1000)return "Hustler";
+  return "Nobody";
+}
+function staffBoost(){
+  let b=0; staff.forEach(s=>b+=(state.staff[s.id]||0)*s.boost); return b;
+}
+function upgradeMult(){
+  let m=0; upgrades.forEach(u=>{if(state.upgrades[u.id])m+=u.mult}); return m;
+}
+function baseDaily(){
+  let v=0; businesses.forEach(b=>v+=(state.biz[b.id]||0)*b.income);
+  return v*(1+staffBoost()+upgradeMult())*state.market;
+}
+function assetValue(){
+  let v=0;
+  businesses.forEach(b=>v+=(state.biz[b.id]||0)*b.cost*.72);
+  staff.forEach(s=>v+=(state.staff[s.id]||0)*s.cost*.25);
+  upgrades.forEach(u=>{if(state.upgrades[u.id])v+=u.cost*.35});
+  return v;
+}
+function netWorth(){return state.cash+assetValue()}
+function toast(msg){
+  const t=document.getElementById("toast");t.textContent=msg;t.style.display="block";
+  clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.style.display="none",2200)
+}
+function log(msg,type=""){
+  state.log.unshift({msg,type});
+  if(state.log.length>60)state.log.pop();
+}
+function clearLog(){state.log=[];render();}
+
+function doGig(id){
+  const g=gigs.find(x=>x.id===id);
+  const used=state.gigUses[id]||0;
+  if(used>=g.uses)return;
+  if((g.unlock||0)>state.rep)return toast("You need more reputation first.");
+  const pay=Math.round(g.pay[0]+Math.random()*(g.pay[1]-g.pay[0]));
+  state.cash+=pay; state.earned+=pay; state.rep+=g.rep; state.gigUses[id]=used+1;
+  log(`${g.icon} ${g.name}: earned ${fmt(pay)} and +${g.rep} reputation.`,"good");
+  render();save();
+}
+function buyBiz(id){
+  const b=businesses.find(x=>x.id===id);
+  if(state.rep<b.rep)return toast(`Need ${b.rep} reputation.`);
+  if(state.cash<b.cost)return toast("Not enough cash.");
+  state.cash-=b.cost; state.biz[id]=(state.biz[id]||0)+1;
+  state.rep+=Math.max(2,Math.round(b.cost/4000));
+  log(`${b.icon} Bought ${b.name} for ${fmt(b.cost)}.`,"good");
+  render();save();
+}
+function sellBiz(id){
+  const b=businesses.find(x=>x.id===id), count=state.biz[id]||0;
+  if(!count)return;
+  const price=Math.round(b.cost*.62);
+  state.biz[id]--; state.cash+=price;
+  log(`Sold one ${b.name} for ${fmt(price)}.`,"warn");
+  render();save();
+}
+function hire(id){
+  const s=staff.find(x=>x.id===id);
+  if(state.rep<s.rep)return toast(`Need ${s.rep} reputation.`);
+  if(state.cash<s.cost)return toast("Not enough cash.");
+  state.cash-=s.cost; state.staff[id]=(state.staff[id]||0)+1; state.rep+=2;
+  log(`👥 Hired ${s.name}. Income boost increased.`,"good");
+  render();save();
+}
+function buyUpgrade(id){
+  const u=upgrades.find(x=>x.id===id);
+  if(state.upgrades[id])return;
+  if(state.rep<u.rep)return toast(`Need ${u.rep} reputation.`);
+  if(state.cash<u.cost)return toast("Not enough cash.");
+  state.cash-=u.cost; state.upgrades[id]=true; state.rep+=3;
+  log(`🧠 Purchased ${u.name}. Permanent revenue boost unlocked.`,"good");
+  render();save();
+}
+function marketEvent(){
+  const r=Math.random();
+  if(r<.11){state.market=.72;state.marketName="Slowdown";log("📉 Market slowdown: business income is down 28% today.","bad");}
+  else if(r<.22){state.market=1.30;state.marketName="Boom";log("📈 Demand spike: business income is up 30% today.","good");}
+  else if(r<.30){state.market=.90;state.marketName="Soft";log("Market is slightly soft today.","warn");}
+  else {state.market=1;state.marketName="Stable";}
+}
+function randomEvent(){
+  const r=Math.random();
+  if(r<.07 && state.cash>250){
+    const hit=Math.min(state.cash*.12,1800);state.cash-=hit;log(`⚠️ Surprise expense cost ${fmt(hit)}.`,"bad");
+  }else if(r>.93 && netWorth()>2000){
+    const bonus=Math.min(2500,120+netWorth()*.012);state.cash+=bonus;state.earned+=bonus;log(`✨ Referral windfall brought in ${fmt(bonus)}.`,"good");
+  }
+}
+function nextDay(){
+  const profit=Math.max(0,Math.round(baseDaily()));
+  state.cash+=profit;state.earned+=profit;state.day++;
+  if(profit>0)log(`Day ${state.day}: businesses generated ${fmt(profit)}.`,"good");
+  else log(`Day ${state.day}: no passive income yet. Time to hustle.`,"");
+  state.rep+=Math.floor(Object.values(state.biz).reduce((a,b)=>a+b,0)/2);
+  resetGigUses(); marketEvent(); randomEvent();
+  if(netWorth()>=1000000 && !state.won){
+    state.won=true; log("🏆 You hit £1,000,000 net worth. Empire complete.","good"); toast("🏆 £1M NET WORTH — YOU WIN");
+  }
+  render();save();
+}
+function hardReset(){
+  if(confirm("Reset your entire empire?")){
+    localStorage.removeItem("hustleEmpireSave");location.reload();
+  }
+}
+
+function render(){
+  const worth=netWorth(), daily=Math.round(baseDaily());
+  document.getElementById("cashTop").textContent=fmt(state.cash);
+  document.getElementById("dayTop").textContent="Day "+state.day;
+  document.getElementById("repTop").textContent=state.rep.toLocaleString();
+  document.getElementById("worthTop").textContent=fmt(worth);
+  document.getElementById("dailyProfit").textContent=fmt(daily);
+  document.getElementById("earned").textContent=fmt(state.earned);
+  document.getElementById("businessCount").textContent=Object.values(state.biz).reduce((a,b)=>a+b,0);
+  document.getElementById("rankTag").textContent="Rank: "+rank();
+  document.getElementById("heroTitle").textContent=state.won ? "You built a £1M empire." : (worth>100000 ? "Now you're playing with real money." : worth>5000 ? "The hustle is becoming a company." : "Turn £100 into an empire.");
+  document.getElementById("goalText").textContent=`${fmt(worth)} / £1,000,000`;
+  document.getElementById("goalBar").style.width=clamp(worth/1000000*100,0.01,100)+"%";
+  const mt=document.getElementById("marketTag"), mm=state.marketName;
+  mt.textContent=mm; mt.className="tag "+(state.market>1?"good":state.market<.9?"bad":state.market<1?"warn":"good");
+  document.getElementById("marketText").textContent=state.market===1?"Normal demand":`${Math.round((state.market-1)*100)}% income effect`;
+
+  const logEl=document.getElementById("log");logEl.innerHTML="";
+  state.log.forEach(x=>{
+    const obj=typeof x==="string"?{msg:x,type:""}:x;
+    const d=document.createElement("div");d.className=obj.type||"";d.textContent=obj.msg;logEl.appendChild(d);
+  });
+
+  document.getElementById("gigGrid").innerHTML=gigs.map(g=>{
+    const used=state.gigUses[g.id]||0, locked=(g.unlock||0)>state.rep;
+    return `<div class="card ${locked?'locked':''}">
+      <div class="row"><h3>${g.icon} ${g.name}</h3><span class="tag">${used}/${g.uses}</span></div>
+      <div class="sub">${g.desc}</div><div class="money">${fmt(g.pay[0])}–${fmt(g.pay[1])}</div>
+      <div class="sub">${locked?`Unlocks at ${g.unlock} rep`:`+${g.rep} reputation`}</div><br>
+      <button class="btn" ${used>=g.uses||locked?'disabled':''} onclick="doGig('${g.id}')">Do gig</button>
+    </div>`;
+  }).join("");
+
+  document.getElementById("businessGrid").innerHTML=businesses.map(b=>{
+    const count=state.biz[b.id]||0, locked=state.rep<b.rep;
+    return `<div class="card ${locked?'locked':''}">
+      <div class="row"><h3>${b.icon} ${b.name}</h3><span class="tag">${count} owned</span></div>
+      <div class="sub">${b.desc}</div><div class="money">${fmt(b.cost)}</div>
+      <div class="sub">Base income ${fmt(b.income)}/day · requires ${b.rep} rep</div><br>
+      <div class="actions">
+        <button class="btn" ${locked||state.cash<b.cost?'disabled':''} onclick="buyBiz('${b.id}')">Buy</button>
+        <button class="btn secondary" ${count<1?'disabled':''} onclick="sellBiz('${b.id}')">Sell ${fmt(b.cost*.62)}</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("staffGrid").innerHTML=staff.map(s=>{
+    const count=state.staff[s.id]||0, locked=state.rep<s.rep;
+    return `<div class="card ${locked?'locked':''}">
+      <div class="row"><h3>👤 ${s.name}</h3><span class="tag">${count} hired</span></div>
+      <div class="sub">${s.desc}</div><div class="money">${fmt(s.cost)}</div>
+      <div class="sub">Requires ${s.rep} reputation</div><br>
+      <button class="btn" ${locked||state.cash<s.cost?'disabled':''} onclick="hire('${s.id}')">Hire</button>
+    </div>`;
+  }).join("");
+
+  document.getElementById("upgradeGrid").innerHTML=upgrades.map(u=>{
+    const owned=!!state.upgrades[u.id], locked=state.rep<u.rep;
+    return `<div class="card ${locked&&!owned?'locked':''}">
+      <div class="row"><h3>⚙️ ${u.name}</h3><span class="tag ${owned?'good':''}">${owned?'Owned':'Upgrade'}</span></div>
+      <div class="sub">${u.desc}</div><div class="money">${fmt(u.cost)}</div>
+      <div class="sub">Requires ${u.rep} reputation</div><br>
+      <button class="btn" ${owned||locked||state.cash<u.cost?'disabled':''} onclick="buyUpgrade('${u.id}')">${owned?'Purchased':'Buy upgrade'}</button>
+    </div>`;
+  }).join("");
+
+  document.getElementById("finCash").textContent=fmt(state.cash);
+  document.getElementById("finAssets").textContent=fmt(assetValue());
+  document.getElementById("finWorth").textContent=fmt(worth);
+  const risk=state.cash<Math.max(200,baseDaily()*.5)?"Tight cash":state.cash>worth*.45?"Cash heavy":"Balanced";
+  const rt=document.getElementById("riskTag");rt.textContent=risk;rt.className="tag "+(risk==="Tight cash"?"bad":risk==="Balanced"?"good":"warn");
+  document.getElementById("financeList").innerHTML=`
+    <div class="list-item"><div class="left"><strong>Staff boost</strong><small>Combined workforce multiplier</small></div><b>+${Math.round(staffBoost()*100)}%</b></div>
+    <div class="list-item"><div class="left"><strong>Upgrade boost</strong><small>Permanent system multiplier</small></div><b>+${Math.round(upgradeMult()*100)}%</b></div>
+    <div class="list-item"><div class="left"><strong>Market multiplier</strong><small>Current economic conditions</small></div><b>${state.market.toFixed(2)}×</b></div>
+    <div class="list-item"><div class="left"><strong>Save</strong><small>Your progress saves automatically on this device.</small></div><div class="actions"><button class="btn danger" onclick="hardReset()">Reset game</button></div></div>`;
+}
+
+document.querySelectorAll(".nav button").forEach(btn=>btn.addEventListener("click",()=>{
+  document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
+  document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));
+  document.getElementById(btn.dataset.tab).classList.remove("hidden");
+}));
+load();
+if(!Object.keys(state.gigUses||{}).length) resetGigUses();
+render();
+</script>
+</body>
+</html>
