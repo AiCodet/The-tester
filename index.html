@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f1418">
+<title>Lucky Lime</title>
+<style>
+:root{
+  --bg:#0f1418;--sidebar:#11181d;--panel:#172027;--panel2:#1e2931;--panel3:#26333d;
+  --green:#00e701;--green2:#00c701;--text:#f5f7f8;--muted:#9aa9b4;--line:#2a3943;
+  --shadow:0 14px 36px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;min-height:100vh}
+button,input{font:inherit}button{cursor:pointer}
+.shell{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+.sidebar{background:var(--sidebar);border-right:1px solid #202b33;padding:15px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+.logoRow{display:flex;align-items:center;gap:10px;padding:4px 8px 17px}
+.logo{width:38px;height:38px;border-radius:10px;background:var(--green);color:#071008;display:grid;place-items:center;font-weight:1000}
+.logoRow h1{font-size:17px;margin:0}.logoRow small{display:block;color:var(--muted);font-size:8px;letter-spacing:.08em;margin-top:2px}
+.sideSection{margin:8px 0 16px}.sideLabel{color:#687985;font-size:9px;font-weight:900;letter-spacing:.1em;padding:0 9px 7px}
+.sideBtn{width:100%;display:flex;align-items:center;gap:10px;border:0;background:transparent;color:#aebbc3;padding:10px 11px;border-radius:8px;text-align:left;font-weight:750;font-size:13px}
+.sideBtn:hover{background:#182129;color:white}.sideBtn.active{background:#1e2b33;color:#fff}
+.sideBtn .ico{width:20px;text-align:center}
+.fakeNote{margin-top:auto;background:#141e24;border:1px solid #24313a;border-radius:10px;padding:11px;color:var(--muted);font-size:10px;line-height:1.45}
+.main{min-width:0}
+.topbar{height:66px;background:#141b20;border-bottom:1px solid #222e36;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 22px;position:sticky;top:0;z-index:30}
+.mobileMenu{display:none;border:0;background:transparent;color:white;font-size:22px}
+.search{max-width:440px;flex:1;position:relative}
+.search input{width:100%;background:#0e1519;border:1px solid #2a3943;border-radius:8px;color:#fff;padding:11px 14px 11px 38px;outline:none}
+.search span{position:absolute;left:13px;top:10px;color:#73838e}
+.wallet{display:flex;align-items:center;background:#0d1418;border:1px solid #26333c;border-radius:8px;overflow:hidden}
+.balance{padding:9px 12px;font-size:13px;font-weight:900}.balance small{color:#91a1ac;font-weight:700;margin-right:5px}
+.wallet button{border:0;background:var(--green);color:#071008;font-weight:1000;padding:10px 13px}
+.content{max-width:1260px;margin:auto;padding:23px 24px 100px}
+.screen{display:none}.screen.active{display:block}
+.hero{display:grid;grid-template-columns:1.2fr .8fr;min-height:205px;background:
+radial-gradient(circle at 76% 20%,rgba(0,231,1,.2),transparent 29%),
+linear-gradient(120deg,#17262a,#112024 65%,#11271b);
+border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.heroText{padding:27px}.heroText .eyebrow{color:var(--green);font-weight:1000;font-size:10px;letter-spacing:.1em}
+.heroText h2{font-size:34px;margin:9px 0 8px;line-height:1.02}.heroText p{color:#a2b0b9;max-width:600px;font-size:13px;line-height:1.5;margin:0}
+.heroButtons{display:flex;gap:8px;margin-top:18px}
+.primary,.secondary{border:0;border-radius:7px;padding:10px 14px;font-weight:900}
+.primary{background:var(--green);color:#071008}.secondary{background:#26343c;color:white}
+.heroArt{display:grid;place-items:center;font-size:100px;filter:drop-shadow(0 18px 28px #0007)}
+.categoryBar{display:flex;gap:7px;overflow:auto;margin:18px 0}
+.cat{border:0;background:#172027;color:#9cacb6;border-radius:7px;padding:9px 12px;font-size:12px;font-weight:800;white-space:nowrap}
+.cat.active{background:#26333c;color:white}
+.section{margin-top:23px}.sectionHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sectionHead h3{font-size:16px;margin:0}.sectionHead button{border:0;background:transparent;color:#7f919d;font-size:11px;font-weight:800}
+.cardRow{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.gameCard{min-width:0;cursor:pointer}.thumb{height:154px;border-radius:9px;position:relative;display:grid;place-items:center;font-size:56px;overflow:hidden;
+background:radial-gradient(circle at 50% 18%,#2d5d433c,transparent 40%),linear-gradient(145deg,#21333d,#16232b)}
+.thumb:after{content:"PLAY";position:absolute;inset:0;background:#071008aa;display:grid;place-items:center;color:white;font-weight:1000;font-size:11px;opacity:0;transition:.15s}
+.gameCard:hover .thumb:after{opacity:1}.fav{position:absolute;right:7px;top:7px;z-index:2;border:0;background:#10171bbb;color:#83949f;width:28px;height:28px;border-radius:7px}
+.fav.on{color:#ffd85a}
+.gameTitle{font-size:11px;font-weight:850;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gameSub{font-size:9px;color:#6f818d;margin-top:2px}
+.originals{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.original{height:130px;background:linear-gradient(135deg,#1d2931,#132128);border-radius:9px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer}
+.original span{font-size:32px}.original strong{font-size:12px}.original small{color:#7f919d}
+.statsStrip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+.stat{background:#151f25;border:1px solid #24313a;border-radius:8px;padding:12px}.stat small{display:block;color:#768892;font-size:9px}.stat strong{font-size:17px;display:block;margin-top:3px}
+.gamePage{max-width:860px;margin:auto}
+.back{border:0;background:transparent;color:#8797a2;padding:0 0 13px;font-weight:800}
+.gamePanel{background:#151f25;border:1px solid #26343d;border-radius:10px;padding:18px}
+.gameHeader{display:flex;justify-content:space-between;align-items:center;gap:10px}.gameHeader h2{font-size:18px;margin:0}.demoTag{font-size:9px;background:#0d1711;color:var(--green);border:1px solid #194c25;border-radius:999px;padding:5px 8px;font-weight:1000}
+.betRow{display:flex;gap:7px;margin:15px 0}.betRow input{flex:1;background:#0c1317;border:1px solid #2b3942;color:white;border-radius:7px;padding:10px}.chip{border:0;background:#24323a;color:#d6dde1;border-radius:7px;padding:10px 12px;font-weight:800}
+.play{width:100%;border:0;background:var(--green);color:#061007;border-radius:7px;padding:12px;font-weight:1000}
+.result{color:#8fa0aa;font-size:12px;min-height:35px;margin-top:10px}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px auto;max-width:520px}.reel{aspect-ratio:1;background:#f2f4f5;color:#111;border-radius:8px;display:grid;place-items:center;font-size:54px}
+.wheel{width:220px;height:220px;border-radius:50%;margin:18px auto;border:11px solid #2a3841;background:conic-gradient(#d33b43 0 10deg,#171a1b 10deg 20deg,#d33b43 20deg 30deg,#171a1b 30deg 40deg,#d33b43 40deg 50deg,#171a1b 50deg 60deg,#d33b43 60deg 70deg,#171a1b 70deg 80deg,#d33b43 80deg 90deg,#171a1b 90deg 100deg,#d33b43 100deg 110deg,#171a1b 110deg 120deg,#d33b43 120deg 130deg,#171a1b 130deg 140deg,#d33b43 140deg 150deg,#171a1b 150deg 160deg,#d33b43 160deg 170deg,#171a1b 170deg 180deg,#d33b43 180deg 190deg,#171a1b 190deg 200deg,#d33b43 200deg 210deg,#171a1b 210deg 220deg,#d33b43 220deg 230deg,#171a1b 230deg 240deg,#d33b43 240deg 250deg,#171a1b 250deg 260deg,#d33b43 260deg 270deg,#171a1b 270deg 280deg,#d33b43 280deg 290deg,#171a1b 290deg 300deg,#d33b43 300deg 310deg,#171a1b 310deg 320deg,#d33b43 320deg 330deg,#171a1b 330deg 340deg,#d33b43 340deg 350deg,#0ba34a 350deg 360deg);display:grid;place-items:center}
+.wheel span{width:70px;height:70px;border-radius:50%;background:#fff;color:#111;display:grid;place-items:center;font-weight:1000;font-size:25px}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.choice{border:1px solid #30414b;background:#202c33;color:white;border-radius:7px;padding:10px;font-weight:850}.choice.sel{outline:2px solid var(--green)}
+.cards{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 18px}.card{width:58px;height:82px;background:white;color:#111;border-radius:7px;padding:6px;font-weight:1000}.card.red{color:#d72f39}
+.scoreline{display:flex;justify-content:space-between;color:#8596a1;font-size:11px}
+.triple{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.actionBtn{border:1px solid #30414b;background:#202c33;color:white;border-radius:7px;padding:11px;font-weight:850}
+.activityTable{background:#151f25;border-radius:9px;overflow:hidden}.row{display:grid;grid-template-columns:2fr 1fr 1fr;padding:11px 13px;border-bottom:1px solid #243039;font-size:11px}.row.head{color:#6f818c;background:#121a1f}.win{color:var(--green)}.loss{color:#ff6970}
+.empty{padding:22px;color:#788a95;text-align:center}
+.mobileNav{display:none}
+@media(max-width:1050px){.cardRow{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:760px){
+.shell{display:block}.sidebar{position:fixed;left:-250px;z-index:80;width:232px;transition:.2s}.sidebar.open{left:0}.mobileMenu{display:block}
+.topbar{padding:0 12px}.search{display:none}.content{padding:17px 12px 90px}.hero{grid-template-columns:1fr}.heroArt{display:none}.heroText{padding:21px}.heroText h2{font-size:28px}
+.cardRow{grid-template-columns:repeat(3,1fr);gap:8px}.thumb{height:120px;font-size:43px}.originals{grid-template-columns:1fr 1fr}.statsStrip{grid-template-columns:1fr 1fr}
+.mobileNav{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;bottom:0;left:0;right:0;background:#121a1f;border-top:1px solid #25313a;z-index:50;padding:7px 4px max(7px,env(safe-area-inset-bottom))}
+.mobileNav button{border:0;background:transparent;color:#84949e;font-size:10px;padding:5px}.mobileNav button.on{color:var(--green)}
+.wallet button{display:none}
+}
+@media(max-width:430px){.cardRow{grid-template-columns:repeat(2,1fr)}.thumb{height:132px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar" id="sidebar">
+  <div class="logoRow"><div class="logo">LL</div><div><h1>Lucky Lime</h1><small>PLAY MONEY ONLY</small></div></div>
+
+  <div class="sideSection">
+    <div class="sideLabel">CASINO</div>
+    <button class="sideBtn active" onclick="go('home',this)"><span class="ico">⌂</span>Casino</button>
+    <button class="sideBtn" onclick="go('favourites',this)"><span class="ico">★</span>Favourites</button>
+    <button class="sideBtn" onclick="go('recent',this)"><span class="ico">↻</span>Recent</button>
+  </div>
+
+  <div class="sideSection">
+    <div class="sideLabel">GAMES</div>
+    <button class="sideBtn" onclick="show('slots')"><span class="ico">🎰</span>Slots</button>
+    <button class="sideBtn" onclick="show('roulette')"><span class="ico">🎯</span>Roulette</button>
+    <button class="sideBtn" onclick="startBJ();show('blackjack')"><span class="ico">🃏</span>Blackjack</button>
+    <button class="sideBtn" onclick="show('dice')"><span class="ico">🎲</span>Dice</button>
+  </div>
+
+  <div class="sideSection">
+    <div class="sideLabel">ACCOUNT</div>
+    <button class="sideBtn" onclick="go('activity',this)"><span class="ico">▤</span>Activity</button>
+    <button class="sideBtn" onclick="go('profile',this)"><span class="ico">●</span>Profile</button>
+  </div>
+
+  <div class="fakeNote">Simulation only. Lucky Lime uses fake credits with no monetary value. No deposits, purchases, prizes or cash-out.</div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <button class="mobileMenu" onclick="toggleSide()">☰</button>
+  <div class="search"><span>⌕</span><input id="searchInput" placeholder="Search your games" oninput="searchGames(this.value)"></div>
+  <div class="wallet"><div class="balance"><small>LL</small><span id="balance">25,000</span></div><button onclick="daily()">Daily +5,000</button></div>
+</header>
+
+<div class="content">
+<section id="home" class="screen active">
+  <div class="hero">
+    <div class="heroText">
+      <div class="eyebrow">LUCKY LIME ORIGINAL</div>
+      <h2>Casino-style games.<br>Zero real money.</h2>
+      <p>A dense, modern game lobby built around fake credits, quick navigation, favourites, recent games and instant play.</p>
+      <div class="heroButtons"><button class="primary" onclick="show('slots')">Play Lucky Reels</button><button class="secondary" onclick="go('recent')">Recent games</button></div>
+    </div>
+    <div class="heroArt">🎰</div>
+  </div>
+
+  <div class="categoryBar">
+    <button class="cat active" onclick="filterCat('all',this)">Casino</button>
+    <button class="cat" onclick="filterCat('original',this)">Lucky Lime Originals</button>
+    <button class="cat" onclick="filterCat('slot',this)">Slots</button>
+    <button class="cat" onclick="filterCat('table',this)">Table Games</button>
+    <button class="cat" onclick="filterCat('fast',this)">Quick Games</button>
+  </div>
+
+  <div class="section">
+    <div class="sectionHead"><h3>🔥 Trending</h3><button>View all</button></div>
+    <div class="cardRow gameCollection">
+      <div class="gameCard" data-name="Lucky Reels" data-cat="slot" onclick="openGame('slots','Lucky Reels')"><div class="thumb">🎰<button class="fav" onclick="fav(event,'Lucky Reels')">★</button></div><div class="gameTitle">Lucky Reels</div><div class="gameSub">Lucky Lime</div></div>
+      <div class="gameCard" data-name="European Roulette" data-cat="table" onclick="openGame('roulette','European Roulette')"><div class="thumb">🎯<button class="fav" onclick="fav(event,'European Roulette')">★</button></div><div class="gameTitle">European Roulette</div><div class="gameSub">Lucky Lime</div></div>
+      <div class="gameCard" data-name="Blackjack" data-cat="table" onclick="startBJ();openGame('blackjack','Blackjack')"><div class="thumb">🃏<button class="fav" onclick="fav(event,'Blackjack')">★</button></div><div class="gameTitle">Blackjack</div><div class="gameSub">Lucky Lime</div></div>
+      <div class="gameCard" data-name="Dice Duel" data-cat="fast" onclick="openGame('dice','Dice Duel')"><div class="thumb">🎲<button class="fav" onclick="fav(event,'Dice Duel')">★</button></div><div class="gameTitle">Dice Duel</div><div class="gameSub">Lucky Lime</div></div>
+      <div class="gameCard" data-name="Coin Flip" data-cat="fast" onclick="openGame('coin','Coin Flip')"><div class="thumb">🪙<button class="fav" onclick="fav(event,'Coin Flip')">★</button></div><div class="gameTitle">Coin Flip</div><div class="gameSub">Lucky Lime</div></div>
+      <div class="gameCard" data-name="High Low" data-cat="table" onclick="startHiLo();openGame('hilo','High Low')"><div class="thumb">🔼<button class="fav" onclick="fav(event,'High Low')">★</button></div><div class="gameTitle">High / Low</div><div class="gameSub">Lucky Lime</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sectionHead"><h3>⚡ Lucky Lime Originals</h3><button>View all</button></div>
+    <div class="originals">
+      <div class="original" onclick="openGame('dice','Dice Duel')"><span>🎲</span><div><strong>Dice Duel</strong><br><small>Quick game</small></div></div>
+      <div class="original" onclick="openGame('coin','Coin Flip')"><span>🪙</span><div><strong>Coin Flip</strong><br><small>Quick game</small></div></div>
+      <div class="original" onclick="startHiLo();openGame('hilo','High Low')"><span>🔼</span><div><strong>High / Low</strong><br><small>Card game</small></div></div>
+      <div class="original" onclick="openGame('slots','Lucky Reels')"><span>🎰</span><div><strong>Lucky Reels</strong><br><small>Slot game</small></div></div>
+    </div>
+  </div>
+
+  <div class="statsStrip">
+    <div class="stat"><small>PLAY BALANCE</small><strong id="statBank">25,000</strong></div>
+    <div class="stat"><small>ROUNDS PLAYED</small><strong id="statRounds">0</strong></div>
+    <div class="stat"><small>FAKE-CREDIT WINS</small><strong id="statWins">0</strong></div>
+    <div class="stat"><small>FAVOURITES</small><strong id="statFavs">0</strong></div>
+  </div>
+</section>
+
+<section id="favourites" class="screen">
+  <div class="sectionHead"><h3>★ Favourites</h3><button onclick="go('home')">Back to casino</button></div>
+  <div id="favGrid" class="cardRow"></div>
+</section>
+
+<section id="recent" class="screen">
+  <div class="sectionHead"><h3>↻ Recently Played</h3><button onclick="go('home')">Back to casino</button></div>
+  <div id="recentGrid" class="cardRow"></div>
+</section>
+
+<section id="activity" class="screen">
+  <div class="sectionHead"><h3>Activity</h3><span style="color:#71838e;font-size:10px">Local device history</span></div>
+  <div class="activityTable"><div class="row head"><span>Game</span><span>Result</span><span>Credits</span></div><div id="activityRows"></div></div>
+</section>
+
+<section id="profile" class="screen">
+  <div class="hero" style="min-height:170px">
+    <div class="heroText"><div class="eyebrow">PLAYER PROFILE</div><h2 style="font-size:28px">Lucky Lime Guest</h2><p>Your progress is saved locally on this browser.</p></div><div class="heroArt" style="font-size:70px">👤</div>
+  </div>
+  <div class="statsStrip">
+    <div class="stat"><small>BALANCE</small><strong id="profileBank">0</strong></div>
+    <div class="stat"><small>ROUNDS</small><strong id="profileRounds">0</strong></div>
+    <div class="stat"><small>WINS</small><strong id="profileWins">0</strong></div>
+    <div class="stat"><small>RECENT GAMES</small><strong id="profileRecent">0</strong></div>
+  </div>
+  <button class="secondary" style="margin-top:15px" onclick="resetData()">Reset simulation data</button>
+</section>
+
+<section id="slots" class="screen gamePage">
+  <button class="back" onclick="go('home')">← Casino</button><div class="gamePanel">
+    <div class="gameHeader"><h2>🎰 Lucky Reels</h2><span class="demoTag">FAKE CREDITS</span></div>
+    <div class="slots"><div class="reel" id="r1">🍒</div><div class="reel" id="r2">⭐</div><div class="reel" id="r3">7️⃣</div></div>
+    <div class="betRow"><button class="chip" onclick="setCost('slotCost',50)">50</button><button class="chip" onclick="setCost('slotCost',100)">100</button><button class="chip" onclick="setCost('slotCost',500)">500</button><input id="slotCost" value="100" type="number" min="10"></div>
+    <button class="play" onclick="spinSlots()">PLAY ROUND</button><div class="result" id="slotResult">Match symbols to earn fake credits.</div>
+  </div>
+</section>
+
+<section id="roulette" class="screen gamePage">
+  <button class="back" onclick="go('home')">← Casino</button><div class="gamePanel">
+    <div class="gameHeader"><h2>🎯 European Roulette</h2><span class="demoTag">FAKE CREDITS</span></div>
+    <div class="wheel"><span id="rouletteNum">?</span></div>
+    <div class="choices"><button class="choice sel" data-c="red" onclick="pickColour(this)">RED</button><button class="choice" data-c="black" onclick="pickColour(this)">BLACK</button><button class="choice" data-c="green" onclick="pickColour(this)">GREEN</button></div>
+    <div class="betRow"><button class="chip" onclick="setCost('rouletteCost',50)">50</button><button class="chip" onclick="setCost('rouletteCost',100)">100</button><button class="chip" onclick="setCost('rouletteCost',500)">500</button><input id="rouletteCost" value="100" type="number" min="10"></div>
+    <button class="play" onclick="spinRoulette()">PLAY ROUND</button><div class="result" id="rouletteResult">Choose a colour.</div>
+  </div>
+</section>
+
+<section id="blackjack" class="screen gamePage">
+  <button class="back" onclick="go('home')">← Casino</button><div class="gamePanel">
+    <div class="gameHeader"><h2>🃏 Blackjack</h2><span class="demoTag">FAKE CREDITS</span></div>
+    <div class="scoreline"><span>Dealer</span><span id="dealerScore">0</span></div><div class="cards" id="dealerCards"></div>
+    <div class="scoreline"><span>You</span><span id="playerScore">0</span></div><div class="cards" id="playerCards"></div>
+    <div class="betRow"><button class="chip" onclick="setCost('bjCost',50)">50</button><button class="chip" onclick="setCost('bjCost',100)">100</button><button class="chip" onclick="setCost('bjCost',500)">500</button><input id="bjCost" value="100" type="number" min="10"></div>
+    <div class="triple"><button class="actionBtn" onclick="bjHit()">HIT</button><button class="actionBtn" onclick="bjStand()">STAND</button><button class="actionBtn" onclick="startBJ()">NEW</button></div>
+    <div class="result" id="bjResult">Get closer to 21 than the dealer.</div>
+  </div>
+</section>
+
+<section id="dice" class="screen gamePage">
+  <button class="back" onclick="go('home')">← Casino</button><div class="gamePanel">
+    <div class="gameHeader"><h2>🎲 Dice Duel</h2><span class="demoTag">FAKE CREDITS</span></div>
+    <div class="slots" style="grid-template-columns:1fr 1fr"><div class="reel" id="die1">⚄</div><div class="reel" id="die2">⚂</div></div>
+    <div class="betRow"><button class="chip" onclick="setCost('diceCost',50)">50</button><button class="chip" onclick="setCost('diceCost',100)">100</button><button class="chip" onclick="setCost('diceCost',500)">500</button><input id="diceCost" value="100" type="number" min="10"></div>
+    <button class="play" onclick="rollDice()">ROLL</button><div class="result" id="diceResult">Higher roll wins.</div>
+  </div>
+</section>
+
+<section id="coin" class="screen gamePage">
+  <button class="back" onclick="go('home')">← Casino</button><div class="gamePanel">
+    <div class="gameHeader"><h2>🪙 Coin Flip</h2><span class="demoTag">FAKE CREDITS</span></div>
+    <div class="reel" id="coinFace" style="width:180px;margin:20px auto;font-size:70px">H</div>
+    <div class="choices"><button class="choice sel" data-s="heads" onclick="pickCoin(this)">HEADS</button><button class="choice" data-s="tails" onclick="pickCoin(this)">TAILS</button><div></div></div>
+    <div class="betRow"><input id="coinCost" value="100" type="number" min="10"></div>
+    <button class="play" onclick="flipCoin()">FLIP</button><div class="result" id="coinResult">Pick a side.</div>
+  </div>
+</section>
+
+<section id="hilo" class="screen gamePage">
+  <button class="back" onclick="go('home')">← Casino</button><div class="gamePanel">
+    <div class="gameHeader"><h2>🔼 High / Low</h2><span class="demoTag">FAKE CREDITS</span></div>
+    <div class="reel" id="hiloCard" style="width:180px;margin:20px auto;font-size:62px">7</div>
+    <div class="betRow"><input id="hiloCost" value="100" type="number" min="10"></div>
+    <div class="choices"><button class="choice" onclick="playHiLo('higher')">HIGHER</button><button class="choice" onclick="playHiLo('lower')">LOWER</button><div></div></div>
+    <div class="result" id="hiloResult">Will the next card be higher or lower?</div>
+  </div>
+</section>
+
+</div>
+</main>
+</div>
+
+<nav class="mobileNav">
+<button class="on" onclick="go('home')">⌂<br>Casino</button>
+<button onclick="go('favourites')">★<br>Saved</button>
+<button onclick="go('recent')">↻<br>Recent</button>
+<button onclick="go('profile')">●<br>Profile</button>
+</nav>
+
+<script>
+const K='llstake_';
+let state={
+ bank:+localStorage.getItem(K+'bank')||25000,
+ hist:JSON.parse(localStorage.getItem(K+'hist')||'[]'),
+ favs:JSON.parse(localStorage.getItem(K+'favs')||'[]'),
+ recent:JSON.parse(localStorage.getItem(K+'recent')||'[]')
+};
+let picked='red',coinPick='heads',bj={p:[],d:[],bet:0,active:false},hilo=7;
+const symbols=['🍒','🍋','⭐','💎','7️⃣'], dice=['⚀','⚁','⚂','⚃','⚄','⚅'];
+const reds=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+const gameMap={
+ 'Lucky Reels':['🎰','slots'],'European Roulette':['🎯','roulette'],'Blackjack':['🃏','blackjack'],
+ 'Dice Duel':['🎲','dice'],'Coin Flip':['🪙','coin'],'High Low':['🔼','hilo']
+};
+function save(){localStorage.setItem(K+'bank',state.bank);localStorage.setItem(K+'hist',JSON.stringify(state.hist));localStorage.setItem(K+'favs',JSON.stringify(state.favs));localStorage.setItem(K+'recent',JSON.stringify(state.recent));render()}
+function fmt(n){return Math.floor(n).toLocaleString()}
+function render(){
+ document.getElementById('balance').textContent=fmt(state.bank);
+ document.getElementById('statBank').textContent=fmt(state.bank);document.getElementById('profileBank').textContent=fmt(state.bank);
+ let rounds=state.hist.length,wins=state.hist.filter(x=>x.delta>0).length;
+ document.getElementById('statRounds').textContent=rounds;document.getElementById('statWins').textContent=wins;document.getElementById('statFavs').textContent=state.favs.length;
+ document.getElementById('profileRounds').textContent=rounds;document.getElementById('profileWins').textContent=wins;document.getElementById('profileRecent').textContent=state.recent.length;
+ document.querySelectorAll('.gameCard').forEach(c=>{let b=c.querySelector('.fav');if(b)b.classList.toggle('on',state.favs.includes(c.dataset.name))});
+ renderCollection('favGrid',state.favs);renderCollection('recentGrid',state.recent);
+ let ar=document.getElementById('activityRows');ar.innerHTML=state.hist.length?state.hist.slice().reverse().map(h=>`<div class="row"><span>${h.game}</span><span class="${h.delta>0?'win':h.delta<0?'loss':''}">${h.delta>0?'Win':h.delta<0?'Loss':'Draw'}</span><span class="${h.delta>=0?'win':'loss'}">${h.delta>=0?'+':''}${fmt(h.delta)}</span></div>`).join(''):'<div class="empty">No rounds played yet.</div>'
+}
+function renderCollection(id,names){
+ let el=document.getElementById(id);if(!names.length){el.innerHTML='<div class="empty" style="grid-column:1/-1">Nothing here yet.</div>';return}
+ el.innerHTML=names.map(n=>{let [ico,page]=gameMap[n]||['🎮','home'];return `<div class="gameCard" onclick="${n==='Blackjack'?'startBJ();':''}${n==='High Low'?'startHiLo();':''}openGame('${page}','${n}')"><div class="thumb">${ico}</div><div class="gameTitle">${n}</div><div class="gameSub">Lucky Lime</div></div>`}).join('')
+}
+function toggleSide(){document.getElementById('sidebar').classList.toggle('open')}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.getElementById('sidebar').classList.remove('open');scrollTo(0,0)}
+function go(id,btn){show(id);if(btn){document.querySelectorAll('.sideBtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}render()}
+function openGame(page,name){if(name){state.recent=state.recent.filter(x=>x!==name);state.recent.unshift(name);state.recent=state.recent.slice(0,6);save()}show(page)}
+function fav(e,name){e.stopPropagation();state.favs=state.favs.includes(name)?state.favs.filter(x=>x!==name):[...state.favs,name];save()}
+function filterCat(cat,btn){document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.gameCollection .gameCard').forEach(c=>c.style.display=cat==='all'||c.dataset.cat===cat?'block':'none')}
+function searchGames(q){q=q.toLowerCase();document.querySelectorAll('.gameCollection .gameCard').forEach(c=>c.style.display=c.dataset.name.toLowerCase().includes(q)?'block':'none')}
+function daily(){let d=new Date().toDateString();if(localStorage.getItem(K+'daily')===d)return alert('Daily fake-credit refill already claimed.');state.bank+=5000;localStorage.setItem(K+'daily',d);save()}
+function resetData(){if(confirm('Reset all Lucky Lime simulation data?')){Object.keys(localStorage).filter(k=>k.startsWith(K)).forEach(k=>localStorage.removeItem(k));location.reload()}}
+function setCost(id,n){document.getElementById(id).value=Math.min(n,state.bank||10)}
+function cost(id){let n=Math.floor(+document.getElementById(id).value);if(!n||n<10){alert('Minimum round cost is 10 fake credits.');return null}if(n>state.bank){alert('Not enough fake credits.');return null}return n}
+function log(game,delta){state.hist.push({game,delta,t:Date.now()});if(state.hist.length>60)state.hist.shift();save()}
+
+function spinSlots(){let c=cost('slotCost');if(!c)return;state.bank-=c;let a=[0,0,0].map(()=>symbols[Math.floor(Math.random()*symbols.length)]);['r1','r2','r3'].forEach((id,i)=>document.getElementById(id).textContent=a[i]);let p=0;if(a[0]===a[1]&&a[1]===a[2])p=c*(a[0]==='7️⃣'?10:a[0]==='💎'?7:5);else if(a[0]===a[1]||a[1]===a[2]||a[0]===a[2])p=c*2;state.bank+=p;log('Lucky Reels',p-c);document.getElementById('slotResult').textContent=p?`Round returned ${fmt(p)} fake credits.`:'No match.'}
+function pickColour(el){document.querySelectorAll('#roulette .choice').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');picked=el.dataset.c}
+function spinRoulette(){let c=cost('rouletteCost');if(!c)return;state.bank-=c;let n=Math.floor(Math.random()*37),col=n===0?'green':reds.includes(n)?'red':'black';let p=picked===col?c*(col==='green'?14:2):0;state.bank+=p;log('European Roulette',p-c);document.getElementById('rouletteNum').textContent=n;document.getElementById('rouletteResult').textContent=`${n} ${col.toUpperCase()} — ${p?fmt(p)+' returned':'no return'}.`}
+
+function draw(){let vs=['A','2','3','4','5','6','7','8','9','10','J','Q','K'],ss=['♥','♦','♣','♠'];return{v:vs[Math.floor(Math.random()*vs.length)],s:ss[Math.floor(Math.random()*ss.length)]}}
+function score(a){let t=0,aces=0;a.forEach(c=>{if(c.v==='A'){t+=11;aces++}else if(['J','Q','K'].includes(c.v))t+=10;else t+=+c.v});while(t>21&&aces){t-=10;aces--}return t}
+function drawBJ(){document.getElementById('playerCards').innerHTML=bj.p.map(c=>`<div class="card ${['♥','♦'].includes(c.s)?'red':''}">${c.v}<br>${c.s}</div>`).join('');document.getElementById('dealerCards').innerHTML=bj.d.map(c=>`<div class="card ${['♥','♦'].includes(c.s)?'red':''}">${c.v}<br>${c.s}</div>`).join('');document.getElementById('playerScore').textContent=score(bj.p);document.getElementById('dealerScore').textContent=score(bj.d)}
+function startBJ(){bj={p:[draw(),draw()],d:[draw(),draw()],bet:0,active:true};drawBJ();let e=document.getElementById('bjResult');if(e)e.textContent='Choose hit or stand.'}
+function lockBJ(){if(bj.bet)return true;let c=cost('bjCost');if(!c)return false;bj.bet=c;state.bank-=c;save();return true}
+function finishBJ(r){bj.active=false;let p=r==='win'?bj.bet*2:r==='draw'?bj.bet:0;state.bank+=p;log('Blackjack',p-bj.bet);document.getElementById('bjResult').textContent=r==='win'?'You win.':r==='draw'?'Draw — round cost returned.':'Dealer wins.'}
+function bjHit(){if(!bj.active)startBJ();if(!lockBJ())return;bj.p.push(draw());drawBJ();if(score(bj.p)>21)finishBJ('lose');else if(score(bj.p)===21)bjStand()}
+function bjStand(){if(!bj.active||!lockBJ())return;while(score(bj.d)<17)bj.d.push(draw());drawBJ();let p=score(bj.p),d=score(bj.d);finishBJ(d>21||p>d?'win':p===d?'draw':'lose')}
+
+function rollDice(){let c=cost('diceCost');if(!c)return;state.bank-=c;let a=1+Math.floor(Math.random()*6),b=1+Math.floor(Math.random()*6);document.getElementById('die1').textContent=dice[a-1];document.getElementById('die2').textContent=dice[b-1];let p=a>b?c*2:a===b?c:0;state.bank+=p;log('Dice Duel',p-c);document.getElementById('diceResult').textContent=`${a} vs ${b} — ${a>b?'you win':a===b?'draw':'house wins'}.`}
+function pickCoin(el){document.querySelectorAll('#coin .choice').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');coinPick=el.dataset.s}
+function flipCoin(){let c=cost('coinCost');if(!c)return;state.bank-=c;let s=Math.random()<.5?'heads':'tails';document.getElementById('coinFace').textContent=s==='heads'?'H':'T';let p=s===coinPick?c*2:0;state.bank+=p;log('Coin Flip',p-c);document.getElementById('coinResult').textContent=`${s.toUpperCase()} — ${p?'you win':'you lose'}.`}
+function val(){return 2+Math.floor(Math.random()*13)}function label(v){return({11:'J',12:'Q',13:'K',14:'A'})[v]||v}
+function startHiLo(){hilo=val();let e=document.getElementById('hiloCard');if(e)e.textContent=label(hilo)}
+function playHiLo(x){let c=cost('hiloCost');if(!c)return;state.bank-=c;let n=val(),ok=x==='higher'?n>hilo:n<hilo,drawn=n===hilo,p=drawn?c:ok?c*2:0;state.bank+=p;log('High Low',p-c);document.getElementById('hiloResult').textContent=`${label(hilo)} → ${label(n)} — ${drawn?'draw':ok?'correct':'wrong'}.`;hilo=n;document.getElementById('hiloCard').textContent=label(n)}
+render();
+</script>
+</body>
+</html>
