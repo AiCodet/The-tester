@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hustle Empire AI</title>
+<style>
+:root{--bg:#071019;--panel:#101b27;--panel2:#162333;--panel3:#1b2b3e;--line:#283d52;--text:#f5f8fb;--muted:#8fa3b8;--accent:#65e7ff;--accent2:#8c78ff;--good:#62dc97;--bad:#ff7180;--warn:#ffd166;--gold:#ffca58}
+*{box-sizing:border-box} body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at 8% -10%,rgba(101,231,255,.13),transparent 27%),radial-gradient(circle at 100% 0%,rgba(140,120,255,.13),transparent 30%),var(--bg)}
+button,input{font:inherit}.shell{max-width:1240px;margin:auto;padding:14px}.top{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:1.25fr repeat(5,minmax(95px,.5fr));gap:9px;padding:8px 0 12px;background:linear-gradient(var(--bg) 74%,transparent)}
+.brand,.stat,.panel{background:rgba(16,27,39,.94);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 28px rgba(0,0,0,.14)}.brand{padding:12px 14px;display:flex;align-items:center;gap:11px}.logo{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#061018;font-weight:1000;font-size:21px}.brand h1{font-size:18px;margin:0}.brand p{font-size:11px;color:var(--muted);margin:2px 0 0}.stat{padding:10px 11px}.stat b{display:block;font-size:16px}.stat span{font-size:10px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:215px 1fr;gap:14px}.nav{height:max-content;position:sticky;top:96px;padding:9px}.nav button{display:flex;align-items:center;gap:9px;width:100%;border:0;background:transparent;color:var(--muted);padding:11px;border-radius:11px;cursor:pointer;text-align:left;margin:2px 0}.nav button:hover,.nav button.active{color:var(--text);background:var(--panel2)}.main{min-width:0}.panel{padding:15px;margin-bottom:13px}.hero{min-height:198px;display:flex;align-items:flex-end;background:linear-gradient(90deg,rgba(7,16,25,.93),rgba(7,16,25,.46)),radial-gradient(circle at 74% 30%,rgba(101,231,255,.17),transparent 25%),linear-gradient(135deg,#122434,#191d39)}.hero h2{font-size:31px;line-height:1.03;margin:7px 0}.hero p{max-width:650px;color:#b8c7d5;margin:0 0 14px}.btn{border:0;border-radius:11px;padding:9px 13px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--accent),#62baff);color:#061018}.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.btn.gold{background:linear-gradient(135deg,#ffe08a,#ffb84a);color:#2b1800}.btn.danger{background:#3a1d25;color:#ff9aa3;border:1px solid #66313c}.btn:disabled{opacity:.37;cursor:not-allowed}.btn.sm{padding:7px 9px;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:13px;min-width:0}.card h3{font-size:15px;margin:0 0 5px}.sub,.tiny{color:var(--muted);font-size:11px}.money{font-size:21px;font-weight:900;margin:9px 0}.kpi{font-size:26px;font-weight:950}.row{display:flex;justify-content:space-between;align-items:center;gap:9px}.actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.tag{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;background:#203247;color:#bed0e2;font-size:10px;font-weight:700;white-space:nowrap}.tag.good{background:#143a29;color:#82e8ae}.tag.bad{background:#45212b;color:#ffa0a8}.tag.warn{background:#493a1b;color:#ffe197}.tag.gold{background:#4a3515;color:#ffd27a}.locked{opacity:.6;filter:saturate(.65)}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 11px}.section-title h2{font-size:18px;margin:0}.list{display:grid;gap:8px}.list-item{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:11px;background:var(--panel2);border:1px solid var(--line);border-radius:12px}.list-item .left{min-width:0}.list-item strong{display:block;font-size:13px}.list-item small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.meter{height:7px;background:#0a131d;border-radius:999px;overflow:hidden;margin:6px 0}.meter i{height:100%;display:block;background:linear-gradient(90deg,var(--accent2),var(--accent))}.progress-big{height:11px;background:#0a131d;border-radius:999px;overflow:hidden;margin:9px 0}.progress-big i{height:100%;display:block;background:linear-gradient(90deg,var(--accent),var(--accent2))}.two{display:grid;grid-template-columns:1.15fr .85fr;gap:13px}.log{height:260px;overflow:auto;font-size:12px}.log div{padding:7px 0;border-bottom:1px dashed #26394c;color:#c7d3df}.log .good{color:#82e6ac}.log .bad{color:#ff98a1}.log .warn{color:#ffe08c}.log .ai{color:#8edfff}.hidden{display:none!important}
+.skill{display:grid;grid-template-columns:110px 1fr 38px;align-items:center;gap:8px;margin:8px 0}.skill span{font-size:11px}.advisor{border-left:3px solid var(--accent);padding-left:12px}.advisor h3{margin:0 0 5px}.advisor p{margin:0;color:#c5d3df;font-size:13px}.choice{display:grid;gap:8px}.choice button{width:100%;text-align:left}.event-banner{padding:10px 12px;border-radius:12px;background:linear-gradient(90deg,rgba(101,231,255,.12),rgba(140,120,255,.12));border:1px solid #335270}.rival{position:relative;overflow:hidden}.rival:after{content:"";position:absolute;left:0;bottom:0;height:3px;width:var(--share,30%);background:linear-gradient(90deg,var(--accent2),var(--accent))}.notif{position:fixed;right:18px;bottom:18px;max-width:350px;z-index:40;background:#101b27;border:1px solid var(--line);border-radius:12px;padding:11px 13px;box-shadow:0 15px 40px #0008;display:none}.modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:grid;place-items:center;z-index:50;padding:18px}.modal-box{max-width:520px;width:100%;background:#101b27;border:1px solid var(--line);border-radius:18px;padding:18px}.modal-box h2{margin-top:0}.modal-box p{color:#b9c7d4;font-size:13px}.contract-card{border-color:#3b5570}.contract-card.featured{box-shadow:inset 0 0 0 1px rgba(101,231,255,.25)}
+@media(max-width:940px){.top{grid-template-columns:1fr 1fr 1fr}.brand{grid-column:1/-1}.layout{grid-template-columns:1fr}.nav{position:static;display:flex;overflow:auto;gap:5px}.nav button{width:auto;white-space:nowrap}.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:670px){.grid,.grid.four,.two{grid-template-columns:1fr}.top{grid-template-columns:1fr 1fr}.shell{padding:9px}.hero h2{font-size:27px}.skill{grid-template-columns:92px 1fr 32px}.actions{justify-content:flex-start}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="brand"><div class="logo">HE</div><div><h1>Hustle Empire AI</h1><p>Build, automate, outsmart rivals.</p></div></div>
+    <div class="stat"><b id="cashTop">£100</b><span>Cash</span></div>
+    <div class="stat"><b id="dayTop">Day 1</b><span>Time</span></div>
+    <div class="stat"><b id="levelTop">Lv. 1</b><span>Founder level</span></div>
+    <div class="stat"><b id="energyTop">100</b><span>Energy</span></div>
+    <div class="stat"><b id="worthTop">£100</b><span>Net worth</span></div>
+  </div>
+
+  <div class="layout">
+    <aside class="nav panel">
+      <button class="active" data-tab="dashboard">🏠 Dashboard</button>
+      <button data-tab="gigs">⚡ Gigs & Deals</button>
+      <button data-tab="businesses">🏢 Businesses</button>
+      <button data-tab="team">👥 Team</button>
+      <button data-tab="ailab">🧠 AI Lab</button>
+      <button data-tab="rivals">🤖 Rivals</button>
+      <button data-tab="finance">📊 Finance</button>
+    </aside>
+
+    <main class="main">
+      <section id="dashboard" class="tab">
+        <div class="panel hero"><div>
+          <span class="tag gold" id="rankTag">Rank: Nobody</span>
+          <h2 id="heroTitle">Turn £100 into an empire.</h2>
+          <p>Take client gigs, negotiate contracts, build companies, hire staff and use your AI systems to beat rival founders to £1,000,000.</p>
+          <div class="actions" style="justify-content:flex-start"><button class="btn" onclick="nextDay()">End Day →</button><button class="btn secondary" onclick="switchTab('gigs')">Find work</button></div>
+        </div></div>
+        <div id="dailyEvent" class="event-banner panel"></div>
+        <div class="grid four">
+          <div class="panel"><div class="tiny">DAILY PROFIT</div><div class="kpi" id="dailyProfit">£0</div><div class="sub">After wages & market effects</div></div>
+          <div class="panel"><div class="tiny">REPUTATION</div><div class="kpi" id="repKpi">0</div><div class="sub">Unlocks better clients & firms</div></div>
+          <div class="panel"><div class="tiny">BUSINESS POWER</div><div class="kpi" id="bizPower">0</div><div class="sub">Combined owned businesses</div></div>
+          <div class="panel"><div class="tiny">MARKET SHARE</div><div class="kpi" id="shareKpi">0%</div><div class="sub">You vs AI rivals</div></div>
+        </div>
+        <div class="two">
+          <div class="panel">
+            <div class="section-title"><h2>Empire progress</h2><span class="sub" id="goalText"></span></div>
+            <div class="progress-big"><i id="goalBar"></i></div>
+            <div class="sub">First founder to £1m net worth wins.</div>
+          </div>
+          <div class="panel advisor">
+            <div class="section-title"><h2>AI Advisor</h2><span class="tag good">LIVE</span></div>
+            <p id="advisorText"></p>
+            <div style="margin-top:10px"><button class="btn secondary sm" onclick="refreshAdvice(true)">Recalculate advice</button></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="section-title"><h2>Founder skills</h2><span class="sub">Skills change gig odds and business output</span></div>
+          <div id="skillsBox"></div>
+        </div>
+        <div class="panel"><div class="section-title"><h2>Activity</h2><button class="btn secondary sm" onclick="clearLog()">Clear</button></div><div class="log" id="log"></div></div>
+      </section>
+
+      <section id="gigs" class="tab hidden">
+        <div class="panel">
+          <div class="section-title"><h2>Live Gig Board</h2><div class="actions"><span class="tag" id="leadCount">0 leads</span><button class="btn secondary sm" onclick="generateGigs(true)">Refresh £25</button></div></div>
+          <div class="sub" style="margin-bottom:10px">Dynamic clients are generated from your reputation, skills and current market.</div>
+          <div class="grid" id="gigGrid"></div>
+        </div>
+        <div class="panel">
+          <div class="section-title"><h2>Active contracts</h2><span class="sub">Complete over several days</span></div>
+          <div class="grid" id="contractGrid"></div>
+        </div>
+      </section>
+
+      <section id="businesses" class="tab hidden"><div class="panel"><div class="section-title"><h2>Business Marketplace</h2><span class="sub">Buy, scale and sell companies</span></div><div class="grid" id="businessGrid"></div></div></section>
+
+      <section id="team" class="tab hidden">
+        <div class="panel"><div class="section-title"><h2>Team</h2><span class="sub">Staff cost wages but boost your empire</span></div><div class="grid" id="staffGrid"></div></div>
+        <div class="panel"><div class="section-title"><h2>Automation upgrades</h2><span class="sub">Permanent company systems</span></div><div class="grid" id="upgradeGrid"></div></div>
+      </section>
+
+      <section id="ailab" class="tab hidden">
+        <div class="two">
+          <div class="panel">
+            <div class="section-title"><h2>AI Strategy Lab</h2><span class="tag good">OFFLINE AI</span></div>
+            <div class="advisor"><h3 id="labHeadline">Analysing...</h3><p id="labAdvice"></p></div>
+            <div class="choice" id="aiActions" style="margin-top:12px"></div>
+          </div>
+          <div class="panel">
+            <div class="section-title"><h2>AI level</h2><span class="tag" id="aiLevelTag">Basic</span></div>
+            <div class="kpi" id="aiScore">0</div><div class="sub">AI score improves with upgrades and tech skill.</div>
+            <div class="meter"><i id="aiBar"></i></div>
+          </div>
+        </div>
+        <div class="panel"><div class="section-title"><h2>AI modules</h2><span class="sub">Unlock smarter automations</span></div><div class="grid" id="aiModuleGrid"></div></div>
+      </section>
+
+      <section id="rivals" class="tab hidden">
+        <div class="panel"><div class="section-title"><h2>Rival founders</h2><span class="sub">They invest and grow every day</span></div><div class="grid" id="rivalGrid"></div></div>
+        <div class="panel"><div class="section-title"><h2>Competitive intelligence</h2><span class="tag warn">AI SIM</span></div><div class="list" id="intelList"></div></div>
+      </section>
+
+      <section id="finance" class="tab hidden">
+        <div class="grid four">
+          <div class="panel"><div class="tiny">CASH</div><div class="kpi" id="finCash"></div></div>
+          <div class="panel"><div class="tiny">ASSETS</div><div class="kpi" id="finAssets"></div></div>
+          <div class="panel"><div class="tiny">NET WORTH</div><div class="kpi" id="finWorth"></div></div>
+          <div class="panel"><div class="tiny">LIFETIME REVENUE</div><div class="kpi" id="finRevenue"></div></div>
+        </div>
+        <div class="panel"><div class="section-title"><h2>Company overview</h2><span class="tag" id="riskTag"></span></div><div class="list" id="financeList"></div></div>
+        <div class="panel"><div class="section-title"><h2>Achievements</h2><span class="sub" id="achievementCount"></span></div><div class="grid" id="achievementGrid"></div></div>
+      </section>
+    </main>
+  </div>
+</div>
+<div class="notif" id="notif"></div>
+<div id="modalRoot"></div>
+<script>
+const VERSION=2;
+const fmt=n=>"£"+Math.round(Number(n)||0).toLocaleString("en-GB");
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const rnd=(a,b)=>Math.floor(a+Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const uid=()=>Math.random().toString(36).slice(2,9);
+const skills=["sales","creative","operations","tech"];
+const skillLabel={sales:"Sales",creative:"Creative",operations:"Operations",tech:"Tech"};
+const clientNames=["Northstar","Oak & Co","Bluebird","Foundry","Limehouse","Atlas","PixelFox","Redwood","Brightside","Nova","Forge","Cornerstone","Mosaic","Summit","Vanta","Orchid"];
+const gigTemplates=[
+ {type:"sales",icon:"📞",names:["Lead generation sprint","Sales outreach setup","Client pitch pack"],base:55,energy:18,rep:2},
+ {type:"creative",icon:"🎨",names:["Brand refresh","Social campaign","Landing page design"],base:70,energy:22,rep:3},
+ {type:"operations",icon:"📦",names:["Inventory clean-up","Delivery planning","Process overhaul"],base:62,energy:20,rep:3},
+ {type:"tech",icon:"💻",names:["Website fix","Automation setup","Dashboard build"],base:90,energy:26,rep:4}
+];
+const businesses=[
+ {id:"vending",name:"Vending Route",icon:"🥤",cost:450,income:46,wage:0,rep:0,skill:"operations",desc:"Low-risk machines with steady local demand."},
+ {id:"detail",name:"Car Detailing",icon:"🧽",cost:1800,income:165,wage:25,rep:12,skill:"sales",desc:"Repeat customers and stronger margins."},
+ {id:"store",name:"Online Store",icon:"🛒",cost:6200,income:470,wage:60,rep:28,skill:"creative",desc:"Scalable, volatile and marketing-heavy."},
+ {id:"agency",name:"Creative Agency",icon:"💻",cost:21000,income:1420,wage:180,rep:60,skill:"creative",desc:"High-margin client work with staff leverage."},
+ {id:"saas",name:"SaaS Company",icon:"🧠",cost:72000,income:4700,wage:650,rep:120,skill:"tech",desc:"Software revenue that rewards strong tech skill."},
+ {id:"property",name:"Property Group",icon:"🏙️",cost:285000,income:15500,wage:2100,rep:220,skill:"operations",desc:"Late-game cashflow and asset value."}
+];
+const staff=[
+ {id:"assistant",name:"Assistant",cost:850,wage:35,boost:.05,rep:7,skill:"operations",desc:"+5% empire revenue and +1 daily energy recovery."},
+ {id:"salesrep",name:"Sales Rep",cost:3600,wage:120,boost:.11,rep:22,skill:"sales",desc:"+11% revenue and improves sales gigs."},
+ {id:"designer",name:"Designer",cost:4800,wage:145,boost:.10,rep:28,skill:"creative",desc:"+10% revenue and improves creative gigs."},
+ {id:"engineer",name:"Automation Engineer",cost:14500,wage:420,boost:.18,rep:55,skill:"tech",desc:"+18% revenue and boosts AI score."},
+ {id:"manager",name:"Operations Manager",cost:23000,wage:650,boost:.24,rep:75,skill:"operations",desc:"+24% revenue across every business."}
+];
+const upgrades=[
+ {id:"brand",name:"Brand System",cost:1400,mult:.08,rep:9,desc:"+8% permanent revenue."},
+ {id:"crm",name:"CRM Stack",cost:5200,mult:.14,rep:26,desc:"+14% revenue and better contract odds."},
+ {id:"automation",name:"Automation Stack",cost:19000,mult:.24,rep:58,desc:"+24% revenue and +10 AI score."},
+ {id:"analytics",name:"Analytics Engine",cost:64000,mult:.35,rep:130,desc:"+35% revenue and sharper forecasts."}
+];
+const aiModules=[
+ {id:"leadbot",name:"Lead Scoring AI",cost:2500,score:12,rep:16,desc:"Generates one extra gig each day."},
+ {id:"pricing",name:"Pricing AI",cost:9000,score:22,rep:42,desc:"+10% gig payouts and better premium pitch odds."},
+ {id:"forecast",name:"Forecast AI",cost:26000,score:36,rep:80,desc:"Shows tomorrow's likely market condition."},
+ {id:"autobid",name:"Auto-Bid Agent",cost:80000,score:55,rep:150,desc:"Can automatically complete one easy gig each day."}
+];
+const achievements=[
+ {id:"firstgig",name:"First Invoice",desc:"Complete your first gig.",check:s=>s.stats.gigs>=1},
+ {id:"firstbiz",name:"Owner",desc:"Buy your first business.",check:s=>totalBiz(s)>=1},
+ {id:"10k",name:"Five Figures",desc:"Reach £10,000 net worth.",check:s=>netWorth(s)>=10000},
+ {id:"100rep",name:"Known Name",desc:"Reach 100 reputation.",check:s=>s.rep>=100},
+ {id:"team5",name:"Real Team",desc:"Hire five total staff.",check:s=>totalStaff(s)>=5},
+ {id:"ai50",name:"Machine Assisted",desc:"Reach 50 AI score.",check:s=>aiScore(s)>=50},
+ {id:"million",name:"Empire",desc:"Reach £1,000,000 net worth.",check:s=>netWorth(s)>=1000000}
+];
+const rivalTemplates=[
+ {name:"Nova Works",focus:"Tech",aggr:.82,color:"cyan"},
+ {name:"Iron & Oak",focus:"Operations",aggr:.58,color:"gold"},
+ {name:"Pixel House",focus:"Creative",aggr:.70,color:"purple"}
+];
+function freshState(){return {version:VERSION,cash:100,day:1,rep:0,xp:0,energy:100,maxEnergy:100,earned:0,biz:{},staff:{},upgrades:{},aiModules:{},activeContracts:[],gigs:[],market:{mult:1,name:"Stable",note:"Normal demand across the market."},tomorrowHint:null,logs:[{msg:"Day 1 — £100, no employees, no excuses.",type:"ai"}],achievements:{},stats:{gigs:0,failedGigs:0,contracts:0},skills:{sales:1,creative:1,operations:1,tech:1},rivals:rivalTemplates.map((r,i)=>({...r,worth:650+i*250,cash:300+i*120,growth:.06+i*.015,last:"Scanning the market"})),advisor:"",won:false};}
+let state=freshState();
+function migrate(s){const n=freshState(); if(!s||typeof s!=="object")return n; n.cash=Number(s.cash??100);n.day=Number(s.day??1);n.rep=Number(s.rep??0);n.earned=Number(s.earned??0);n.biz={...(s.biz||{})};n.staff={...(s.staff||{})};n.upgrades={...(s.upgrades||{})};n.logs=Array.isArray(s.logs)?s.logs:(Array.isArray(s.log)?s.log.map(x=>typeof x==="string"?{msg:x,type:""}:x):n.logs);return {...n,...s,version:VERSION,skills:{...n.skills,...(s.skills||{})},stats:{...n.stats,...(s.stats||{})},market:{...n.market,...(s.market||{})},rivals:Array.isArray(s.rivals)&&s.rivals.length?s.rivals:n.rivals};}
+function save(){localStorage.setItem("hustleEmpireAI",JSON.stringify(state));}
+function load(){try{const raw=localStorage.getItem("hustleEmpireAI")||localStorage.getItem("hustleEmpireSave");if(raw)state=migrate(JSON.parse(raw));}catch(e){state=freshState();}}
+function log(msg,type=""){state.logs.unshift({msg,type});state.logs=state.logs.slice(0,80);}
+function notify(msg){const n=document.getElementById("notif");n.textContent=msg;n.style.display="block";clearTimeout(window.nt);window.nt=setTimeout(()=>n.style.display="none",2200);}
+function level(){return 1+Math.floor(state.xp/80);}
+function totalBiz(s=state){return Object.values(s.biz||{}).reduce((a,b)=>a+(Number(b)||0),0)}
+function totalStaff(s=state){return Object.values(s.staff||{}).reduce((a,b)=>a+(Number(b)||0),0)}
+function staffBoost(){return staff.reduce((v,x)=>v+(state.staff[x.id]||0)*x.boost,0)}
+function upgradeBoost(){return upgrades.reduce((v,x)=>v+(state.upgrades[x.id]?x.mult:0),0)}
+function aiScore(s=state){let v=(s.skills.tech||1)*3;aiModules.forEach(m=>{if(s.aiModules[m.id])v+=m.score});if(s.upgrades.automation)v+=10;v+=(s.staff.engineer||0)*8;return v}
+function wageBill(){return staff.reduce((v,x)=>v+(state.staff[x.id]||0)*x.wage,0)+businesses.reduce((v,x)=>v+(state.biz[x.id]||0)*x.wage,0)}
+function baseRevenue(){let v=0;businesses.forEach(b=>{const c=state.biz[b.id]||0;if(c){const sk=1+((state.skills[b.skill]||1)-1)*.025;v+=c*b.income*sk}});return v*(1+staffBoost()+upgradeBoost())*(state.market.mult||1)}
+function contractDaily(){return state.activeContracts.reduce((v,c)=>v+(c.daily||0),0)}
+function dailyProfit(){return Math.round(baseRevenue()+contractDaily()-wageBill())}
+function assetValue(){let v=0;businesses.forEach(b=>v+=(state.biz[b.id]||0)*b.cost*.74);staff.forEach(x=>v+=(state.staff[x.id]||0)*x.cost*.22);upgrades.forEach(x=>{if(state.upgrades[x.id])v+=x.cost*.32});aiModules.forEach(x=>{if(state.aiModules[x.id])v+=x.cost*.30});return v}
+function netWorth(s=state){if(s!==state){let v=s.cash||0;businesses.forEach(b=>v+=(s.biz?.[b.id]||0)*b.cost*.74);return v}return state.cash+assetValue()}
+function marketShare(){const me=Math.max(1,netWorth());const total=me+state.rivals.reduce((a,r)=>a+r.worth,0);return me/total*100}
+function rank(){const w=netWorth();if(w>=1e6)return "Mogul";if(w>=3e5)return "Tycoon";if(w>=1e5)return "Founder";if(w>=25000)return "Operator";if(w>=5000)return "Entrepreneur";if(w>=1000)return "Hustler";return "Nobody"}
+function skillGain(type,amount=1){state.skills[type]=clamp((state.skills[type]||1)+amount,1,20)}
+function spendEnergy(n){if(state.energy<n){notify("Not enough energy — end the day to recover.");return false}state.energy-=n;return true}
+function payoutMult(){return state.aiModules.pricing?1.10:1}
+function generateGigs(paid=false){if(paid){if(state.cash<25)return notify("You need £25 to refresh leads.");state.cash-=25}const count=4+(state.aiModules.leadbot?1:0);state.gigs=[];for(let i=0;i<count;i++){const t=pick(gigTemplates);const diff=clamp(1+Math.floor(state.rep/24)+rnd(-1,1),1,8);const client=pick(clientNames);const payout=Math.round(t.base*(1+diff*.38)*(0.88+Math.random()*.28)*payoutMult());state.gigs.push({id:uid(),client,name:pick(t.names),type:t.type,icon:t.icon,diff,payout,energy:t.energy+diff*2,rep:t.rep+Math.floor(diff/2)});}if(paid)log("🔄 Paid £25 to refresh the client board.","warn");render();save();}
+function gigChance(g,mode="standard"){const skill=state.skills[g.type]||1;let chance=.70+(skill-g.diff)*.055+state.rep*.0008;if(state.upgrades.crm)chance+=.05;if(mode==="safe")chance+=.12;if(mode==="premium")chance-=.14;if(state.aiModules.pricing&&mode==="premium")chance+=.08;return clamp(chance,.18,.96)}
+function openGig(id){const g=state.gigs.find(x=>x.id===id);if(!g)return;const modes=[{id:"safe",name:"Safe quote",mult:.82,desc:"Lower fee, higher close chance."},{id:"standard",name:"Standard quote",mult:1,desc:"Balanced price and probability."},{id:"premium",name:"Premium pitch",mult:1.35,desc:"More money, harder to close."}];document.getElementById("modalRoot").innerHTML=`<div class="modal" onclick="if(event.target===this)closeModal()"><div class="modal-box"><div class="row"><h2>${g.icon} ${g.client}</h2><span class="tag">${skillLabel[g.type]} · D${g.diff}</span></div><p><b>${g.name}</b><br>Choose how aggressively to price the job. Your ${skillLabel[g.type]} skill is ${state.skills[g.type]}.</p><div class="choice">${modes.map(m=>`<button class="btn secondary" onclick="attemptGig('${g.id}','${m.id}')"><b>${m.name}</b> — ${fmt(g.payout*m.mult)} · ${Math.round(gigChance(g,m.id)*100)}% chance<br><span class="sub">${m.desc}</span></button>`).join("")}</div><br><button class="btn danger sm" onclick="closeModal()">Cancel</button></div></div>`}
+function closeModal(){document.getElementById("modalRoot").innerHTML=""}
+function attemptGig(id,mode){const g=state.gigs.find(x=>x.id===id);if(!g)return;if(!spendEnergy(g.energy))return;const mult=mode==="safe"?.82:mode==="premium"?1.35:1;const chance=gigChance(g,mode);const success=Math.random()<chance;state.gigs=state.gigs.filter(x=>x.id!==id);if(success){const pay=Math.round(g.payout*mult);state.cash+=pay;state.earned+=pay;state.rep+=g.rep;state.xp+=10+g.diff*3;state.stats.gigs++;skillGain(g.type,Math.random()<.65?1:0);log(`${g.icon} ${g.client}: ${g.name} closed for ${fmt(pay)}.`,"good");notify(`Deal won: ${fmt(pay)}`);if(g.diff>=4&&Math.random()<.32)offerContract(g)}else{state.rep=Math.max(0,state.rep-1);state.xp+=3;state.stats.failedGigs++;skillGain(g.type,Math.random()<.22?1:0);log(`❌ ${g.client} rejected your ${mode} quote.`,"bad");notify("Client passed on the quote.")}closeModal();checkAchievements();render();save()}
+function offerContract(g){const days=rnd(3,6);const total=Math.round(g.payout*(2.2+g.diff*.25));state.activeContracts.push({id:uid(),client:g.client,name:`${g.name} retainer`,daysLeft:days,daily:Math.round(total/days),type:g.type});log(`📄 ${g.client} signed a ${days}-day retainer worth about ${fmt(total)}.`,"good")}
+function buyBiz(id){const b=businesses.find(x=>x.id===id);if(state.rep<b.rep)return notify(`Need ${b.rep} reputation.`);if(state.cash<b.cost)return notify("Not enough cash.");state.cash-=b.cost;state.biz[id]=(state.biz[id]||0)+1;state.rep+=Math.max(2,Math.floor(b.cost/7000));state.xp+=18;log(`${b.icon} Acquired ${b.name} for ${fmt(b.cost)}.`,"good");checkAchievements();render();save()}
+function sellBiz(id){const b=businesses.find(x=>x.id===id);if(!(state.biz[id]>0))return;const sale=Math.round(b.cost*.63);state.biz[id]--;state.cash+=sale;log(`Sold one ${b.name} for ${fmt(sale)}.`,"warn");render();save()}
+function hire(id){const x=staff.find(s=>s.id===id);if(state.rep<x.rep)return notify(`Need ${x.rep} reputation.`);if(state.cash<x.cost)return notify("Not enough cash.");state.cash-=x.cost;state.staff[id]=(state.staff[id]||0)+1;state.xp+=12;skillGain(x.skill,1);log(`👥 Hired ${x.name}. Weekly-style overhead just became daily-style pain.`,"good");checkAchievements();render();save()}
+function buyUpgrade(id){const x=upgrades.find(u=>u.id===id);if(state.upgrades[id])return;if(state.rep<x.rep)return notify(`Need ${x.rep} reputation.`);if(state.cash<x.cost)return notify("Not enough cash.");state.cash-=x.cost;state.upgrades[id]=true;state.xp+=18;log(`⚙️ Installed ${x.name}.`,"good");render();save()}
+function buyAIModule(id){const x=aiModules.find(m=>m.id===id);if(state.aiModules[id])return;if(state.rep<x.rep)return notify(`Need ${x.rep} reputation.`);if(state.cash<x.cost)return notify("Not enough cash.");state.cash-=x.cost;state.aiModules[id]=true;state.xp+=22;log(`🧠 AI module online: ${x.name}.`,"ai");checkAchievements();render();save()}
+function chooseMarket(){const r=Math.random();if(r<.10)return {mult:.72,name:"Recession",note:"Customers are cutting spend. Revenue is down hard."};if(r<.23)return {mult:.88,name:"Soft",note:"Demand is weaker than usual."};if(r>.88)return {mult:1.32,name:"Boom",note:"Demand spike: businesses are printing today."};if(r>.72)return {mult:1.13,name:"Hot",note:"Strong demand is lifting revenue."};return {mult:1,name:"Stable",note:"Normal demand across the market."}}
+function rivalTurn(){state.rivals.forEach(r=>{const swing=.97+Math.random()*.09;const invest=r.cash>500&&Math.random()<r.aggr*.35;let gain=Math.max(18,r.worth*r.growth*swing*(state.market.mult*.55+.45));if(invest){r.cash-=Math.min(r.cash*.35,12000);gain*=1.18;r.last=`Invested aggressively in ${r.focus}`;}else if(Math.random()<.2){r.last="Held cash and waited"}else{r.last=`Expanded ${r.focus} operations`}r.cash+=gain*.35;r.worth+=gain;});}
+function autoBid(){if(!state.aiModules.autobid||!state.gigs.length)return;const easy=state.gigs.filter(g=>g.diff<=Math.max(2,Math.floor(aiScore()/25))).sort((a,b)=>b.payout-a.payout)[0];if(easy){const pay=Math.round(easy.payout*.72);state.cash+=pay;state.earned+=pay;state.rep+=Math.max(1,easy.rep-1);state.stats.gigs++;state.gigs=state.gigs.filter(g=>g.id!==easy.id);log(`🤖 Auto-Bid Agent completed ${easy.client}'s ${easy.name} for ${fmt(pay)}.`,"ai")}}
+function processContracts(){state.activeContracts.forEach(c=>{state.cash+=c.daily;state.earned+=c.daily;c.daysLeft--;log(`📄 ${c.client} retainer paid ${fmt(c.daily)}.`,"good")});state.activeContracts=state.activeContracts.filter(c=>{if(c.daysLeft<=0){state.rep+=4;state.stats.contracts++;log(`✅ ${c.client} contract completed. +4 reputation.`,"good");return false}return true})}
+function randomEvent(){const r=Math.random();if(r<.07&&state.cash>400){const hit=Math.round(Math.min(state.cash*.10,4500));state.cash-=hit;log(`⚠️ Unexpected supplier/maintenance bill: ${fmt(hit)}.`,"bad")}else if(r>.94&&state.rep>15){const bonus=Math.round(150+state.rep*12);state.cash+=bonus;state.earned+=bonus;log(`✨ Referral bonus brought in ${fmt(bonus)}.`,"good")}}
+function recoverEnergy(){const extra=(state.staff.assistant||0);state.energy=clamp(state.energy+58+extra,0,state.maxEnergy)}
+function forecastTomorrow(){if(!state.aiModules.forecast){state.tomorrowHint=null;return}const options=["Stable most likely","Soft market possible","Hot market possible","Volatility elevated"];state.tomorrowHint=pick(options)}
+function nextDay(){const p=Math.round(baseRevenue()-wageBill());state.cash+=p;state.earned+=Math.max(0,p);if(p>=0)log(`💰 Day ${state.day} operations produced ${fmt(p)} after wages.`,"good");else log(`📉 Day ${state.day} operations lost ${fmt(Math.abs(p))} after wages.`,"bad");processContracts();autoBid();randomEvent();rivalTurn();state.day++;recoverEnergy();state.market=chooseMarket();forecastTomorrow();generateGigs(false);state.xp+=5+totalBiz()*2;if(state.cash<0){state.rep=Math.max(0,state.rep-3);log("🚨 Cash is negative. Sell assets or win gigs before the business spirals.","bad")}checkAchievements();if(netWorth()>=1000000&&!state.won){state.won=true;log("🏆 £1,000,000 net worth reached. You built the empire.","good");notify("🏆 YOU HIT £1,000,000") }refreshAdvice(false);render();save()}
+function advisorRecommendation(){const w=netWorth(),p=dailyProfit(),ai=aiScore();if(state.energy<25)return "Energy is low. Avoid forcing a hard gig; end the day unless a high-value easy lead is available.";if(state.cash<0)return "Liquidity warning: you are below £0 cash. Sell a non-core business or prioritise a safe quote immediately.";const affordable=businesses.filter(b=>state.rep>=b.rep&&state.cash>=b.cost).sort((a,b)=>b.cost-a.cost)[0];if(affordable&&state.cash>affordable.cost*1.35)return `You can safely afford ${affordable.name}. Buying it would add roughly ${fmt(affordable.income)} base revenue per day before boosts.`;if(ai<25&&state.cash>=2500&&state.rep>=16&&!state.aiModules.leadbot)return "Your lead flow is the bottleneck. Lead Scoring AI is the highest-impact upgrade available right now.";if(p<100&&state.gigs.length)return "Passive income is still weak. Focus on gigs and build reputation before tying up too much cash in overhead.";if(w>25000&&staffBoost()<.2)return "You have enough scale that staff leverage matters. A stronger team should beat hoarding cash.";const best=state.gigs.slice().sort((a,b)=>(b.payout/b.energy)-(a.payout/a.energy))[0];if(best)return `${best.client}'s ${best.name} currently has the best payout-to-energy ratio on your board.`;return "Your position is balanced. Keep 20–30% of net worth liquid and reinvest the rest into scalable assets."}
+function refreshAdvice(show){state.advisor=advisorRecommendation();if(show)notify("AI advice recalculated.");render();save()}
+function aiActions(){const arr=[];const best=state.gigs.slice().sort((a,b)=>(b.payout/b.energy)-(a.payout/a.energy))[0];if(best)arr.push({t:`Prioritise ${best.client}`,d:`Best current gig efficiency: ${fmt(best.payout)} for ${best.energy} energy.`,fn:`openGig('${best.id}')`});const buy=businesses.filter(b=>state.rep>=b.rep&&state.cash>=b.cost).sort((a,b)=>(b.income/b.cost)-(a.income/a.cost))[0];if(buy)arr.push({t:`Acquire ${buy.name}`,d:`Best affordable base yield among unlocked businesses.`,fn:`buyBiz('${buy.id}')`});if(state.energy<45)arr.push({t:"End the day",d:"Recover energy and roll a fresh market/gig board.",fn:"nextDay()"});if(!arr.length)arr.push({t:"Build reputation",d:"Complete low-risk gigs until better assets unlock.",fn:"switchTab('gigs')"});return arr.slice(0,3)}
+function checkAchievements(){achievements.forEach(a=>{if(!state.achievements[a.id]&&a.check(state)){state.achievements[a.id]=true;state.xp+=20;log(`🏅 Achievement unlocked: ${a.name}.`,"gold");notify(`Achievement: ${a.name}`)}})}
+function hardReset(){if(confirm("Reset the whole empire?")){localStorage.removeItem("hustleEmpireAI");localStorage.removeItem("hustleEmpireSave");location.reload()}}
+function clearLog(){state.logs=[];render();save()}
+function switchTab(id){document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.tab===id));window.scrollTo({top:0,behavior:"smooth"})}
+function renderSkills(){document.getElementById("skillsBox").innerHTML=skills.map(s=>`<div class="skill"><span>${skillLabel[s]}</span><div class="meter"><i style="width:${state.skills[s]/20*100}%"></i></div><b>${state.skills[s]}</b></div>`).join("")}
+function renderGigs(){document.getElementById("leadCount").textContent=`${state.gigs.length} leads`;document.getElementById("gigGrid").innerHTML=state.gigs.length?state.gigs.map(g=>{const c=gigChance(g);return `<div class="card"><div class="row"><h3>${g.icon} ${g.client}</h3><span class="tag">D${g.diff}</span></div><div class="sub">${g.name} · ${skillLabel[g.type]}</div><div class="money">${fmt(g.payout)}</div><div class="row"><span class="tag ${c>.75?'good':c<.5?'bad':'warn'}">${Math.round(c*100)}% standard odds</span><span class="tag">⚡ ${g.energy}</span></div><br><button class="btn" onclick="openGig('${g.id}')">Pitch client</button></div>`}).join(""):`<div class="card"><h3>No leads left</h3><div class="sub">Refresh the board or end the day.</div></div>`;document.getElementById("contractGrid").innerHTML=state.activeContracts.length?state.activeContracts.map(c=>`<div class="card contract-card featured"><div class="row"><h3>📄 ${c.client}</h3><span class="tag good">${c.daysLeft} days</span></div><div class="sub">${c.name}</div><div class="money">${fmt(c.daily)}/day</div></div>`).join(""):`<div class="card"><h3>No retainers yet</h3><div class="sub">Harder gigs can convert into multi-day contracts.</div></div>`}
+function renderBusinesses(){document.getElementById("businessGrid").innerHTML=businesses.map(b=>{const n=state.biz[b.id]||0,lock=state.rep<b.rep;const eff=Math.round(b.income*(1+((state.skills[b.skill]||1)-1)*.025));return `<div class="card ${lock?'locked':''}"><div class="row"><h3>${b.icon} ${b.name}</h3><span class="tag">${n} owned</span></div><div class="sub">${b.desc}</div><div class="money">${fmt(b.cost)}</div><div class="sub">~${fmt(eff)}/day each · ${skillLabel[b.skill]} driven · ${fmt(b.wage)} overhead</div><br><div class="actions"><button class="btn" ${lock||state.cash<b.cost?'disabled':''} onclick="buyBiz('${b.id}')">Buy</button><button class="btn secondary" ${n<1?'disabled':''} onclick="sellBiz('${b.id}')">Sell ${fmt(b.cost*.63)}</button></div><br><span class="tag ${lock?'bad':'good'}">${lock?`Needs ${b.rep} rep`:`Unlocked`}</span></div>`}).join("")}
+function renderTeam(){document.getElementById("staffGrid").innerHTML=staff.map(x=>{const n=state.staff[x.id]||0,lock=state.rep<x.rep;return `<div class="card ${lock?'locked':''}"><div class="row"><h3>👤 ${x.name}</h3><span class="tag">${n} hired</span></div><div class="sub">${x.desc}</div><div class="money">${fmt(x.cost)}</div><div class="sub">Wage ${fmt(x.wage)}/day · needs ${x.rep} rep</div><br><button class="btn" ${lock||state.cash<x.cost?'disabled':''} onclick="hire('${x.id}')">Hire</button></div>`}).join("");document.getElementById("upgradeGrid").innerHTML=upgrades.map(x=>{const own=!!state.upgrades[x.id],lock=state.rep<x.rep;return `<div class="card ${lock&&!own?'locked':''}"><div class="row"><h3>⚙️ ${x.name}</h3><span class="tag ${own?'good':''}">${own?'Owned':'System'}</span></div><div class="sub">${x.desc}</div><div class="money">${fmt(x.cost)}</div><div class="sub">Needs ${x.rep} reputation</div><br><button class="btn" ${own||lock||state.cash<x.cost?'disabled':''} onclick="buyUpgrade('${x.id}')">${own?'Installed':'Install'}</button></div>`}).join("")}
+function renderAI(){const score=aiScore();document.getElementById("aiScore").textContent=score;document.getElementById("aiBar").style.width=clamp(score,0,100)+"%";const lvl=score>=100?"Advanced":score>=55?"Smart":score>=25?"Useful":"Basic";document.getElementById("aiLevelTag").textContent=lvl;document.getElementById("labHeadline").textContent=`${lvl} strategy model`;document.getElementById("labAdvice").textContent=state.advisor||advisorRecommendation();document.getElementById("aiActions").innerHTML=aiActions().map(a=>`<button class="btn secondary" onclick="${a.fn}"><b>${a.t}</b><br><span class="sub">${a.d}</span></button>`).join("");document.getElementById("aiModuleGrid").innerHTML=aiModules.map(x=>{const own=!!state.aiModules[x.id],lock=state.rep<x.rep;return `<div class="card ${lock&&!own?'locked':''}"><div class="row"><h3>🧠 ${x.name}</h3><span class="tag ${own?'good':''}">${own?'+AI':'Module'}</span></div><div class="sub">${x.desc}</div><div class="money">${fmt(x.cost)}</div><div class="sub">+${x.score} AI score · needs ${x.rep} rep</div><br><button class="btn" ${own||lock||state.cash<x.cost?'disabled':''} onclick="buyAIModule('${x.id}')">${own?'Online':'Build module'}</button></div>`}).join("")}
+function renderRivals(){const all=[{name:"You",worth:netWorth(),focus:"Mixed",last:"Running your empire"},...state.rivals].sort((a,b)=>b.worth-a.worth);const max=Math.max(...all.map(x=>x.worth));document.getElementById("rivalGrid").innerHTML=all.map((r,i)=>`<div class="card rival" style="--share:${r.worth/max*100}%"><div class="row"><h3>${i===0?'👑 ':''}${r.name}</h3><span class="tag ${r.name==='You'?'good':''}">#${i+1}</span></div><div class="money">${fmt(r.worth)}</div><div class="sub">Focus: ${r.focus}<br>${r.last}</div></div>`).join("");const strongest=state.rivals.slice().sort((a,b)=>b.worth-a.worth)[0];const closest=state.rivals.slice().sort((a,b)=>Math.abs(a.worth-netWorth())-Math.abs(b.worth-netWorth()))[0];document.getElementById("intelList").innerHTML=`<div class="list-item"><div class="left"><strong>Market leader</strong><small>${strongest.name} currently has the strongest rival balance sheet.</small></div><b>${fmt(strongest.worth)}</b></div><div class="list-item"><div class="left"><strong>Closest rival</strong><small>${closest.name} is closest to your current valuation.</small></div><b>${fmt(Math.abs(closest.worth-netWorth()))} gap</b></div><div class="list-item"><div class="left"><strong>AI forecast</strong><small>${state.tomorrowHint||"Build Forecast AI to estimate tomorrow's market."}</small></div><b>${aiScore()}</b></div>`}
+function renderFinance(){document.getElementById("finCash").textContent=fmt(state.cash);document.getElementById("finAssets").textContent=fmt(assetValue());document.getElementById("finWorth").textContent=fmt(netWorth());document.getElementById("finRevenue").textContent=fmt(state.earned);const risk=state.cash<0?"Critical":state.cash<Math.max(250,wageBill()*2)?"Tight":state.cash>netWorth()*.5?"Cash-heavy":"Balanced";const rt=document.getElementById("riskTag");rt.textContent=risk;rt.className=`tag ${risk==='Critical'?'bad':risk==='Tight'?'warn':risk==='Balanced'?'good':''}`;document.getElementById("financeList").innerHTML=`<div class="list-item"><div class="left"><strong>Gross business revenue</strong><small>Before wages and contract income.</small></div><b>${fmt(baseRevenue())}/day</b></div><div class="list-item"><div class="left"><strong>Wage & overhead bill</strong><small>Employees plus business overhead.</small></div><b>-${fmt(wageBill())}/day</b></div><div class="list-item"><div class="left"><strong>Staff boost</strong><small>Combined team multiplier.</small></div><b>+${Math.round(staffBoost()*100)}%</b></div><div class="list-item"><div class="left"><strong>Systems boost</strong><small>Permanent non-AI company upgrades.</small></div><b>+${Math.round(upgradeBoost()*100)}%</b></div><div class="list-item"><div class="left"><strong>Save</strong><small>Autosaves locally in this browser.</small></div><div class="actions"><button class="btn danger sm" onclick="hardReset()">Reset game</button></div></div>`;const unlocked=achievements.filter(a=>state.achievements[a.id]);document.getElementById("achievementCount").textContent=`${unlocked.length}/${achievements.length} unlocked`;document.getElementById("achievementGrid").innerHTML=achievements.map(a=>{const own=!!state.achievements[a.id];return `<div class="card ${own?'':'locked'}"><div class="row"><h3>${own?'🏅':'🔒'} ${a.name}</h3><span class="tag ${own?'gold':''}">${own?'Unlocked':'Locked'}</span></div><div class="sub">${a.desc}</div></div>`}).join("")}
+function render(){const w=netWorth();document.getElementById("cashTop").textContent=fmt(state.cash);document.getElementById("dayTop").textContent=`Day ${state.day}`;document.getElementById("levelTop").textContent=`Lv. ${level()}`;document.getElementById("energyTop").textContent=`${Math.round(state.energy)}/${state.maxEnergy}`;document.getElementById("worthTop").textContent=fmt(w);document.getElementById("rankTag").textContent=`Rank: ${rank()}`;document.getElementById("heroTitle").textContent=state.won?"You built a £1M empire.":w>=100000?"Now you're playing with real money.":w>=5000?"The hustle became a company.":"Turn £100 into an empire.";document.getElementById("dailyProfit").textContent=fmt(dailyProfit());document.getElementById("repKpi").textContent=state.rep;document.getElementById("bizPower").textContent=totalBiz();document.getElementById("shareKpi").textContent=marketShare().toFixed(1)+"%";document.getElementById("goalText").textContent=`${fmt(w)} / £1,000,000`;document.getElementById("goalBar").style.width=clamp(w/1e6*100,.01,100)+"%";document.getElementById("dailyEvent").innerHTML=`<div class="row"><div><b>${state.market.name} market</b><div class="sub">${state.market.note}</div></div><span class="tag ${state.market.mult>1?'good':state.market.mult<1?'bad':'good'}">${state.market.mult.toFixed(2)}× revenue</span></div>`;document.getElementById("advisorText").textContent=state.advisor||advisorRecommendation();renderSkills();renderGigs();renderBusinesses();renderTeam();renderAI();renderRivals();renderFinance();document.getElementById("log").innerHTML=state.logs.map(x=>`<div class="${x.type||''}">${x.msg}</div>`).join("");}
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));
+load();if(!state.gigs||!state.gigs.length)generateGigs(false);refreshAdvice(false);checkAchievements();render();save();
+</script>
+</body>
+</html>
